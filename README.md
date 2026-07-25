@@ -30,11 +30,24 @@ CodeVent Digital follows a four-stage roadmap:
 | `shop.html` | Digital products — eBooks, courses, source code |
 | `testimonial.html` | Learner success stories and platform stats |
 | `toolkit.html` | CodeVent Developer Toolkit — cheat sheets, checklists, templates, planners |
+| `blog/index.html` | Blog overview — free HTML/CSS/JS tutorials |
+| `blog/*.html` | Individual tutorial articles (long-form, SEO-optimized) |
 | `chat.html` | AI learning assistant (CodeVent AI) |
 | `about.html` | Founder and platform background |
 | `contact.html` | Contact form and direct channels |
 | `privacy.html` | Privacy policy |
 | `terms.html` | Terms of service |
+
+## Blog
+
+A public `/blog/` section with free, long-form HTML/CSS/JS tutorials for beginners. Built to satisfy AdSense
+E-E-A-T requirements (original written content, author attribution, structured data) and to give the platform
+an organic-search entry point beyond the core product pages.
+
+- `blog/index.html` — overview grid, links to every article
+- `blog/<slug>.html` — one static file per article, same navbar/footer as the rest of the site
+- Each article ships its own `Article` JSON-LD schema, canonical URL, and Open Graph tags
+- New articles are added the same way: create a new `blog/<slug>.html`, list it in `blog/index.html`, add it to `sitemap.xml`
 
 ## Tech Stack
 
@@ -56,6 +69,13 @@ codevent-digital/
 ├── testimonial.html
 ├── toolkit.html
 ├── chat.html
+├── blog/
+│   ├── index.html
+│   ├── html-for-beginners-complete-guide.html
+│   ├── css-flexbox-tutorial.html
+│   ├── css-grid-layout-guide.html
+│   ├── javascript-dom-manipulation-guide.html
+│   └── javascript-fetch-api-tutorial.html
 ├── about.html
 ├── contact.html
 ├── privacy.html
