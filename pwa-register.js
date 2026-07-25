@@ -9,6 +9,11 @@
  *    Wire any element with id="cv-install-btn" (e.g. in your sidebar)
  *    to trigger the native install prompt on click.
  */
+if (location.hostname === 'emezch93.github.io') {
+  const newPath = location.pathname.replace('/codevent-digital', '') || '/';
+  location.replace('https://codeventdigital.site' + newPath + location.search);
+}
+
 (function () {
   'use strict';
 
