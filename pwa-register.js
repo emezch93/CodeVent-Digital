@@ -5,10 +5,20 @@
  * This file handles:
  *  - SW registration (checks for an existing registration first)
  *  - Update banner
- *  - Install badge (Add to Home Screen)
+ *  - Manual install trigger (Add to Home Screen) — NO auto popup.
+ *    Wire any element with id="cv-install-btn" (e.g. in your sidebar)
+ *    to trigger the native install prompt on click.
  */
 (function () {
   'use strict';
+
+  /* Only the canonical apex domain is allowed to register the SW or
+     offer install. www.codeventdigital.site, the raw github.io pages
+     link, localhost, or any other host are all separate origins as
+     far as the browser is concerned — without this guard they'd each
+     think the app isn't installed yet and re-offer it. */
+  const CANONICAL_HOST = 'codeventdigital.site';
+  if (location.hostname !== CANONICAL_HOST) return;
 
   if (!('serviceWorker' in navigator)) return;
 
@@ -72,64 +82,66 @@
     banner.querySelector('#cv-dismiss-btn').onclick = () => banner.remove();
   }
 
-  /* ── Install Badge ── */
+  /* ── Manual Install (no auto popup) ──
+     Chrome/Edge fire beforeinstallprompt once support is detected.
+     We capture it silently and only prompt when the user clicks
+     your own sidebar/nav "Install" element (id="cv-install-btn").
+     The button is HIDDEN by default and only revealed once a real
+     prompt is available — it's hidden again the instant the app is
+     installed or is already running standalone, so it never lingers.
+
+     Note on "separate browser": install state is per-browser, set
+     by that browser's OS/profile — there is no web API that lets
+     one browser know another browser already installed the app.
+     Installing in Chrome will never be visible to Firefox or Edge.
+     That's a browser platform limit, not something this script can
+     fix — but this script does guarantee the button never shows in
+     a browser where the app IS already installed, and never shows
+     at all until that browser confirms installability. */
   let deferredPrompt = null;
+  const installBtn = document.getElementById('cv-install-btn');
 
   function isStandalone() {
     return window.matchMedia('(display-mode: standalone)').matches ||
            window.navigator.standalone === true; // iOS Safari fallback
   }
 
-  // If already running as an installed app, never show the badge —
-  // and don't bother listening for beforeinstallprompt at all.
+  function hideInstallButton() {
+    if (installBtn) installBtn.style.display = 'none';
+  }
+
+  function revealInstallButton() {
+    if (installBtn) installBtn.style.display = '';
+  }
+
+  // Hide immediately on every load until we know there's something to offer
+  hideInstallButton();
+
   if (!isStandalone()) {
     window.addEventListener('beforeinstallprompt', e => {
-      e.preventDefault();
-      deferredPrompt = e;
-      showInstallBadge();
+      e.preventDefault();      // stop Chrome's mini-infobar too
+      deferredPrompt = e;      // stash it
+      revealInstallButton();   // only now does the button appear
     });
   }
 
-  function showInstallBadge() {
-    if (document.getElementById('cv-install-badge')) return;
-    if (isStandalone()) return; // defensive: never show once installed
-    //const badge = document.createElement('button');
-    //badge.id = 'cv-install-badge';
-    //badge.textContent = '⬇ Install App';
-    Object.assign(badge.style, {
-      position:'fixed', bottom:'1.25rem', right:'1.25rem',
-      background:'#00e5a0', color:'#0d0f1a', border:'none',
-      padding:'.65rem 1.2rem', borderRadius:'99px', fontWeight:'700',
-      fontSize:'.85rem', fontFamily:'system-ui,sans-serif',
-      cursor:'pointer', boxShadow:'0 4px 18px rgba(0,229,160,.35)',
-      zIndex:'99998', transition:'opacity .2s'
-    });
-    badge.onmouseenter = () => badge.style.opacity = '.85';
-    badge.onmouseleave = () => badge.style.opacity = '1';
-    badge.onclick = async () => {
+  function wireInstallButton() {
+    if (!installBtn || installBtn.dataset.cvWired) return;
+    installBtn.dataset.cvWired = '1';
+    installBtn.addEventListener('click', async () => {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') badge.remove();
       deferredPrompt = null;
-    };
-    document.body.appendChild(badge);
+      if (outcome === 'accepted') hideInstallButton();
+    });
   }
 
-  window.addEventListener('appinstalled', () => {
-    const b = document.getElementById('cv-install-badge');
-    if (b) b.remove();
-    deferredPrompt = null;
-  });
+  document.addEventListener('DOMContentLoaded', wireInstallButton);
 
-  /* Re-check on visibility change too — covers the case where a user
-     installs the app in another tab/window, or launches the installed
-     app while this tab is still open in the browser. */
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && isStandalone()) {
-      const b = document.getElementById('cv-install-badge');
-      if (b) b.remove();
-    }
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    hideInstallButton();
   });
 
 })();
