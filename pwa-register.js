@@ -93,9 +93,9 @@
   function showInstallBadge() {
     if (document.getElementById('cv-install-badge')) return;
     if (isStandalone()) return; // defensive: never show once installed
-    const badge = document.createElement('button');
+    //const badge = document.createElement('button');
     badge.id = 'cv-install-badge';
-    //badge.textContent = '⬇ Install App';
+    badge.textContent = '⬇ Install App';
     Object.assign(badge.style, {
       position:'fixed', bottom:'1.25rem', right:'1.25rem',
       background:'#00e5a0', color:'#0d0f1a', border:'none',
