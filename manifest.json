@@ -2,7 +2,7 @@
   "name": "CodeVent Digital",
   "short_name": "CodeVent",
   "description": "Building Developers One Step at a Time — free structured coding courses, real projects, and community.",
-  "start_url": "index.html?utm_source=pwa",
+  "start_url": "/?utm_source=pwa",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -26,19 +26,19 @@
     {
       "name": "Start Learning",
       "short_name": "Learn",
-      "url": "learning.html?utm_source=pwa_shortcut",
+      "url": "/learning?utm_source=pwa_shortcut",
       "icons": [{ "src": "icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Community",
       "short_name": "Community",
-      "url": "community.html?utm_source=pwa_shortcut",
+      "url": "/community?utm_source=pwa_shortcut",
       "icons": [{ "src": "icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Shop",
       "short_name": "Shop",
-      "url": "shop.html?utm_source=pwa_shortcut",
+      "url": "/shop?utm_source=pwa_shortcut",
       "icons": [{ "src": "icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ],

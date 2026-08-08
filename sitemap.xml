@@ -6,12 +6,12 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/about.html</loc>
+    <loc>https://codeventdigital.site/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/learning.html</loc>
+    <loc>https://codeventdigital.site/learning</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -21,57 +21,57 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/blog/html-for-beginners-complete-guide.html</loc>
+    <loc>https://codeventdigital.site/blog/html-for-beginners-complete-guide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/blog/css-flexbox-tutorial.html</loc>
+    <loc>https://codeventdigital.site/blog/css-flexbox-tutorial</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/blog/css-grid-layout-guide.html</loc>
+    <loc>https://codeventdigital.site/blog/css-grid-layout-guide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/blog/javascript-dom-manipulation-guide.html</loc>
+    <loc>https://codeventdigital.site/blog/javascript-dom-manipulation-guide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/blog/javascript-fetch-api-tutorial.html</loc>
+    <loc>https://codeventdigital.site/blog/javascript-fetch-api-tutorial</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/community.html</loc>
+    <loc>https://codeventdigital.site/community</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/testimonial.html</loc>
+    <loc>https://codeventdigital.site/testimonial</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/shop.html</loc>
+    <loc>https://codeventdigital.site/shop</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/contact.html</loc>
+    <loc>https://codeventdigital.site/contact</loc>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/privacy.html</loc>
+    <loc>https://codeventdigital.site/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://codeventdigital.site/terms.html</loc>
+    <loc>https://codeventdigital.site/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
