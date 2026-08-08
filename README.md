@@ -33,10 +33,12 @@ CodeVent Digital follows a four-stage roadmap:
 | `blog/index.html` | Blog overview — free HTML/CSS/JS tutorials |
 | `blog/*.html` | Individual tutorial articles (long-form, SEO-optimized) |
 | `chat.html` | AI learning assistant (CodeVent AI) |
+| `code-editor.html` | Standalone sandboxed live code editor (linked from `chat.html`) |
 | `about.html` | Founder and platform background |
 | `contact.html` | Contact form and direct channels |
 | `privacy.html` | Privacy policy |
 | `terms.html` | Terms of service |
+| `offline.html` | PWA offline fallback page (served by `sw.js` when there's no connection) |
 
 ## Blog
 
@@ -48,6 +50,24 @@ an organic-search entry point beyond the core product pages.
 - `blog/<slug>.html` — one static file per article, same navbar/footer as the rest of the site
 - Each article ships its own `Article` JSON-LD schema, canonical URL, and Open Graph tags
 - New articles are added the same way: create a new `blog/<slug>.html`, list it in `blog/index.html`, add it to `sitemap.xml`
+
+## URL Structure — Important
+
+Cloudflare Pages automatically strips `.html` from every URL and 301-redirects the `.html` version to the
+clean one (e.g. `about.html` → `/about`). This happens at the hosting layer, not in this repo, and there is
+no build config here to change it.
+
+Because of this, every internal link, the `canonical` tag on every page, `sitemap.xml`, and `manifest.json`
+must all point to the **extensionless** URL, not the filename:
+
+- Correct: `href="/about"`, `<link rel="canonical" href="https://codeventdigital.site/about" />`
+- Wrong: `href="about.html"` — this is a live file that still exists and is still linked to and edited as
+  `about.html`, but it should never be referenced by its filename anywhere Google or a visitor can follow it,
+  only the extensionless path.
+
+Mismatches here caused a full round of Google Search Console "Page with redirect" and "Alternate page with
+proper canonical tag" indexing issues in July–August 2026. If you add a new page, give it a canonical tag
+and internal links using the extensionless path from the start.
 
 ## Tech Stack
 
