@@ -33,7 +33,7 @@ CodeVent Digital follows a four-stage roadmap:
 | `blog/index.html` | Blog overview — free HTML/CSS/JS tutorials |
 | `blog/*.html` | Individual tutorial articles (long-form, SEO-optimized) |
 | `chat.html` | AI learning assistant (CodeVent AI) |
-| `code-editor.html` | Standalone sandboxed live code editor (linked from `chat.html`) |
+| `code-editor.html` | Standalone sandboxed live code editor (HTML/CSS/JS with live preview) — linked from the nav and footer of every page |
 | `about.html` | Founder and platform background |
 | `contact.html` | Contact form and direct channels |
 | `privacy.html` | Privacy policy |
@@ -50,6 +50,33 @@ an organic-search entry point beyond the core product pages.
 - `blog/<slug>.html` — one static file per article, same navbar/footer as the rest of the site
 - Each article ships its own `Article` JSON-LD schema, canonical URL, and Open Graph tags
 - New articles are added the same way: create a new `blog/<slug>.html`, list it in `blog/index.html`, add it to `sitemap.xml`
+
+## Code Editor — noindex by design
+
+`code-editor.html` is a tool page, not content, so it's kept out of Google's index the same way `chat.html`
+and `toolkit.html` are:
+
+- `<meta name="robots" content="noindex, follow" />` in its `<head>`
+- Not listed in `sitemap.xml`
+- Still fully linked from the nav and footer on every other page, using the extensionless `/code-editor` path
+  (or `../code-editor` / `../code-editor.html` inside `/blog/`, matching each page's existing link style)
+
+This mirrors the exact pattern that fixed the earlier AdSense content-policy rejection: interactive tools stay
+linked and usable, but only genuine long-form content pages are indexable and listed in the sitemap. If you
+ever add a new interactive tool page, follow this same pattern — noindex it and leave it out of `sitemap.xml`.
+
+## AdSense Compliance Notes (August 2026 pass)
+
+- `ads.txt` confirmed correct: `google.com, pub-1629598637562109, DIRECT, f08c47fec0942fa0`
+- `privacy.html` §5 (Cookies & Local Storage) previously stated the site does **not** use advertising cookies —
+  contradicting the live `adsbygoogle.js` loader already present on every page. Rewritten to correctly disclose
+  Google/third-party ad cookies, link to Google Ads Settings for opt-out, and link to Google's partner-sites
+  policy. Keep this section accurate if the AdSense ad units (currently commented out, pending approval) are
+  turned on.
+- All utility/tool pages (`chat.html`, `toolkit.html`, `code-editor.html`) remain `noindex` and excluded from
+  `sitemap.xml` — required for AdSense's "sufficient original content" review.
+- No page loads more than one `adsbygoogle.js` script instance; ad `<ins>` units are commented out until the
+  account is approved — uncomment per page when ready.
 
 ## URL Structure — Important
 
