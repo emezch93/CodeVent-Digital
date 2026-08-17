@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="CodeVent Digital Shop — Premium e-books, coding courses, and production-ready source codes to accelerate your developer journey." />
+  <meta name="description" content="CodeVent Digital Shop — Premium e-books and practical coding courses in web development, machine learning, Node.js and AI automation." />
   <link rel="canonical" href="https://codeventdigital.site/shop" />
   <meta name="robots" content="index, follow" />
   <meta property="og:type"        content="website" />
   <meta property="og:title"       content="CodeVent Digital Shop — Digital Marketplace for Developers" />
-  <meta property="og:description" content="Premium e-books, coding courses, and production-ready source codes. Start building. Start earning." />
+  <meta property="og:description" content="Premium e-books and practical coding courses. Start building. Start earning." />
   <meta property="og:url"         content="https://emezch93.github.io/codevent-digital/shop.html" />
   <meta property="og:site_name"   content="CodeVent Digital" />
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="CodeVent Digital Shop — Digital Marketplace for Developers" />
-  <meta name="twitter:description" content="Premium e-books, coding courses, and production-ready source codes." />
+  <meta name="twitter:description" content="Premium e-books and practical coding courses." />
   <title>CodeVent Digital Shop — Digital Marketplace</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -26,7 +26,7 @@
     "@type": "Store",
     "name": "CodeVent Digital Shop",
     "url": "https://emezch93.github.io/codevent-digital/shop.html",
-    "description": "Premium e-books, coding courses, and source codes for developers.",
+    "description": "Premium e-books and practical coding courses for developers.",
     "currenciesAccepted": "NGN",
     "paymentAccepted": "Bank Transfer, Paystack"
   }
@@ -285,6 +285,24 @@
       width: 100%;
       max-width: 360px;
     }
+    /* ── Landscape e-book card: cover left, details right ── */
+    .courses-grid .ebook-card {
+      max-width: 780px;
+    }
+    .ebook-card {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .ebook-card .card-img-wrap {
+      width: 270px;
+      height: auto;
+      min-height: 250px;
+      flex-shrink: 0;
+    }
+    .ebook-card .card-body {
+      justify-content: center;
+    }
+    .ebook-card .card-title { font-size: 1.15rem; }
     .shop-card {
       background: var(--dark-2);
       border: 1px solid var(--border);
@@ -432,6 +450,8 @@
     .ci-1 { background: linear-gradient(135deg, #5b4cff, #3d2ee0); }
     .ci-2 { background: linear-gradient(135deg, #00e5a0, #00b37e); }
     .ci-3 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .ci-4 { background: linear-gradient(135deg, #38bdf8, #1d4ed8); }
+    .ci-5 { background: linear-gradient(135deg, #22d3ee, #7c3aed); }
     .card-body {
       padding: 1.5rem;
       display: flex;
@@ -458,8 +478,30 @@
     }
     .badge-ebook  { background: rgba(91,76,255,0.18); border: 1px solid rgba(91,76,255,0.35); color: #a78bfa; }
     .badge-course { background: var(--accent-dim);     border: 1px solid rgba(0,229,160,0.3);   color: var(--accent); }
-    .badge-code   { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3);  color: #fbbf24; }
     .card-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.7; flex: 1; }
+    .ebook-card .card-desc { flex: 0 1 auto; }
+    .card-price {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+      border-top: 1px dashed var(--border-strong);
+      padding-top: 0.85rem;
+    }
+    .price-amount {
+      font-family: var(--font-mono);
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.01em;
+    }
+    .price-note {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+    }
     .btn-card-primary {
       display: flex;
       align-items: center;
@@ -477,22 +519,6 @@
       box-shadow: 0 3px 12px var(--primary-glow);
     }
     .btn-card-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(91,76,255,0.4); }
-    .btn-card-wa {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background: var(--wa-green);
-      color: white;
-      font-size: 0.87rem;
-      font-weight: 700;
-      border-radius: var(--radius-sm);
-      border: none;
-      transition: var(--transition);
-    }
-    .btn-card-wa:hover { background: #1ebe57; transform: translateY(-1px); }
     .contact-wrap { max-width: 860px; margin: 0 auto; }
     .contact-card {
       background: var(--dark-2);
@@ -554,57 +580,6 @@
     .contact-item-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.15rem; }
     .contact-item-link { font-size: 0.82rem; font-weight: 600; color: var(--text); transition: var(--transition); }
     .contact-item-link:hover { color: var(--accent); }
-    .bank-reveal { text-align: center; }
-    .btn-reveal {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: transparent;
-      border: 1px solid var(--border-strong);
-      color: var(--text-muted);
-      padding: 0.7rem 1.5rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem;
-      font-weight: 600;
-      transition: var(--transition);
-    }
-    .btn-reveal:hover { border-color: var(--primary); color: white; background: var(--primary-glow); }
-    .btn-reveal[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); }
-    .bank-details {
-      display: none;
-      margin-top: 1.25rem;
-      background: var(--dark-3);
-      border: 1px solid rgba(0,229,160,0.2);
-      border-radius: var(--radius-sm);
-      padding: 1.5rem;
-      text-align: left;
-    }
-    .bank-details.visible { display: block; animation: fadeIn 0.3s ease; }
-    .bank-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.875rem;
-    }
-    .bank-row:last-of-type { border-bottom: none; }
-    .bank-row span:first-child { color: var(--text-muted); font-weight: 500; }
-    .bank-row strong { color: white; font-family: var(--font-mono); font-size: 0.9rem; }
-    .bank-note {
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      background: rgba(91,76,255,0.08);
-      border: 1px solid rgba(91,76,255,0.2);
-      border-radius: 6px;
-      padding: 0.75rem 1rem;
-    }
-    .bank-note i { color: var(--primary); margin-top: 0.05em; flex-shrink: 0; }
     .modal-backdrop {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.75);
@@ -702,16 +677,6 @@
       padding: 2.5rem 2rem;
       text-align: center;
     }
-    .footer-logo {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      color: white;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-    .footer-logo span { color: var(--accent); }
     .footer p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; }
     .footer a { color: var(--primary); transition: var(--transition); }
     .footer a:hover { color: var(--accent); }
@@ -747,6 +712,17 @@
       .modal-body { padding: 1.25rem; }
       .contact-card { padding: 2rem 1.5rem; }
     }
+    /* ── Landscape e-book card stacks on small phones ── */
+    @media (max-width: 640px) {
+      .courses-grid .ebook-card { max-width: 420px; }
+      .ebook-card { flex-direction: column; }
+      .ebook-card .card-img-wrap {
+        width: 100%;
+        height: 210px;
+        min-height: 0;
+      }
+      .ebook-card .card-title { font-size: 1rem; }
+    }
     @media (max-width: 480px) {
       .hero { padding: 4.5rem 1.25rem 3.5rem; }
       .hero h1 { font-size: 1.9rem; }
@@ -765,7 +741,6 @@
     body.light-mode::before { display: none; }
     body.light-mode .navbar { background: rgba(248,250,252,0.92); }
     body.light-mode .modal-box { background: #ffffff; }
-    body.light-mode .bank-details { background: #f1f5f9; }
   </style>
 </head>
 <body>
@@ -784,7 +759,6 @@
       <a href="#home"    class="nav-link" target="_self">Home</a>
       <a href="#ebooks"  class="nav-link" target="_self">E-books</a>
       <a href="#courses" class="nav-link" target="_self">Courses</a>
-      <a href="#source"  class="nav-link" target="_self">Source Code</a>
       <a href="#contact" class="nav-link" target="_self">Contact</a>
       <a href="blog/index.html" class="nav-link" target="_self">Blog</a>
       <a href="/toolkit" class="nav-link" target="_self">Toolkit</a>
@@ -805,7 +779,7 @@
       <i class="fas fa-bolt"></i> Digital Marketplace
     </div>
     <h1>Premium Digital Products for <em>Developers</em> & Tech Enthusiasts</h1>
-    <p>E-books, coding courses, and production-ready source codes to accelerate your learning and career.</p>
+    <p>E-books and practical coding courses to accelerate your learning and career.</p>
     <a href="#ebooks" class="hero-cta" target="_self">
       <i class="fas fa-arrow-down" aria-hidden="true"></i> Browse Products
     </a>
@@ -822,7 +796,7 @@
     <!-- courses-grid added here to centre the ebook card(s) like the courses section -->
     <div class="shop-grid courses-grid">
 
-      <!--article class="shop-card fade-up" aria-label="Just My Smartphone e-book">
+      <!--article class="shop-card ebook-card fade-up" aria-label="Just My Smartphone e-book">
         <div class="card-img-wrap">
           <img src="front_cover_design_20.png" alt="Just My Smartphone — Build Digital Income Using Only Your Phone" loading="lazy" />
         </div>
@@ -838,7 +812,7 @@
         </div>
       </article>
 
-      <article class="shop-card fade-up" aria-label="AI Powered Side Hustles e-book">
+      <article class="shop-card ebook-card fade-up" aria-label="AI Powered Side Hustles e-book">
         <div class="card-img-wrap">
           <img src="ai_side_hustle_cover__2.png" alt="AI Powered Side Hustles" loading="lazy" />
         </div>
@@ -854,7 +828,7 @@
         </div>
       </article>
 
-      <article class="shop-card fade-up" aria-label="100 Free AI Tools e-book">
+      <article class="shop-card ebook-card fade-up" aria-label="100 Free AI Tools e-book">
         <div class="card-img-wrap">
           <img src="alternative_cover_202.png" alt="100 Free AI Tools" loading="lazy" />
         </div>
@@ -870,7 +844,7 @@
         </div>
       </article-->
 
-      <article class="shop-card fade-up" aria-label="The Digital World e-book">
+      <article class="shop-card ebook-card fade-up" aria-label="The Digital World e-book">
         <div class="card-img-wrap">
           <img src="digital_world_cover_a.png" alt="THE DIGITAL WORLD" loading="lazy" />
         </div>
@@ -891,7 +865,7 @@
         </div>
       </article>
 
-      <!--article class="shop-card fade-up" aria-label="The Digital World v2.0 e-book">
+      <!--article class="shop-card ebook-card fade-up" aria-label="The Digital World v2.0 e-book">
         <div class="card-img-wrap">
           <img src="digital_world_cover_p.png" alt="THE DIGITAL WORLD v2.0" loading="lazy" />
         </div>
@@ -928,9 +902,119 @@
     <div class="section-head fade-up">
       <p class="section-eyebrow">Structured Learning</p>
       <h2 id="courses-title">Coding <em>Courses</em></h2>
-      <p>Learn by building real projects with hands-on video courses delivered via WhatsApp.</p>
+      <p>Practical, project-based video courses. Secure checkout via Paystack.</p>
     </div>
     <div class="shop-grid courses-grid">
+
+      <!-- ── CodeVent Web Development Course ── -->
+      <article class="shop-card fade-up" aria-label="CodeVent Web Development Course">
+        <div class="card-icon-bg ci-4" aria-hidden="true">
+          <i class="fas fa-globe"></i>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <h3 class="card-title">CodeVent Web Development Course</h3>
+            <span class="card-badge badge-course">▶ Course</span>
+          </div>
+          <p class="card-desc">Practical HTML, CSS and JavaScript web development course. Learn by building real, responsive websites and interactive pages from scratch, no prior experience needed.</p>
+          <div class="card-price" aria-label="Price: 15,000 naira, one-time payment">
+            <span class="price-amount">₦15,000</span>
+            <span class="price-note">One-time payment</span>
+          </div>
+          <a
+            href="https://paystack.shop/pay/codevent-web-development-course"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-card-primary"
+            aria-label="Get CodeVent Web Development Course on Paystack"
+          >
+            <i class="fas fa-shopping-cart" aria-hidden="true"></i> Get Web Development Course
+          </a>
+        </div>
+      </article>
+
+      <!-- ── CodeVent Machine Learning Course ── -->
+      <article class="shop-card fade-up" aria-label="CodeVent Machine Learning Course">
+        <div class="card-icon-bg ci-2" aria-hidden="true">
+          <i class="fas fa-brain"></i>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <h3 class="card-title">CodeVent Machine Learning Course</h3>
+            <span class="card-badge badge-course">▶ Course</span>
+          </div>
+          <p class="card-desc">Hands-on machine learning course. Master core ML concepts, algorithms, and real-world applications while building intelligent projects step by step.</p>
+          <div class="card-price" aria-label="Price: 20,000 naira, one-time payment">
+            <span class="price-amount">₦20,000</span>
+            <span class="price-note">One-time payment</span>
+          </div>
+          <a
+            href="https://paystack.shop/pay/codevent-machine-learning-course"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-card-primary"
+            aria-label="Get CodeVent Machine Learning Course on Paystack"
+          >
+            <i class="fas fa-shopping-cart" aria-hidden="true"></i> Get Machine Learning Course
+          </a>
+        </div>
+      </article>
+
+      <!-- ── CodeVent Node.js Development Course ── -->
+      <article class="shop-card fade-up" aria-label="CodeVent Node.js Development Course">
+        <div class="card-icon-bg ci-3" aria-hidden="true">
+          <i class="fab fa-node-js"></i>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <h3 class="card-title">CodeVent Node.js Development Course</h3>
+            <span class="card-badge badge-course">▶ Course</span>
+          </div>
+          <p class="card-desc">Practical Node.js development course. Learn to build fast, scalable server-side applications, REST APIs, and real backend projects with confidence.</p>
+          <div class="card-price" aria-label="Price: 10,000 naira, one-time payment">
+            <span class="price-amount">₦10,000</span>
+            <span class="price-note">One-time payment</span>
+          </div>
+          <a
+            href="https://paystack.shop/pay/codevent-nodejs-course"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-card-primary"
+            aria-label="Get CodeVent Node.js Development Course on Paystack"
+          >
+            <i class="fas fa-shopping-cart" aria-hidden="true"></i> Get Node.js Course
+          </a>
+        </div>
+      </article>
+
+      <!-- ── CodeVent AI Automation Course ── -->
+      <article class="shop-card fade-up" aria-label="CodeVent AI Automation Course">
+        <div class="card-icon-bg ci-5" aria-hidden="true">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <h3 class="card-title">CodeVent AI Automation Course</h3>
+            <span class="card-badge badge-course">▶ Course</span>
+          </div>
+          <p class="card-desc">Practical AI automation course. Learn to design and build AI-powered automation workflows and tools that save time, boost productivity, and create real value.</p>
+          <div class="card-price" aria-label="Price: 30,000 naira, one-time payment">
+            <span class="price-amount">₦30,000</span>
+            <span class="price-note">One-time payment</span>
+          </div>
+          <a
+            href="https://paystack.shop/pay/codevent-ai-automation"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-card-primary"
+            aria-label="Get CodeVent AI Automation Course on Paystack"
+          >
+            <i class="fas fa-shopping-cart" aria-hidden="true"></i> Get AI Automation Course
+          </a>
+        </div>
+      </article>
+
+      <!-- ── HTML Course Practical Video Course (existing, preserved) ── -->
       <article class="shop-card fade-up" aria-label="HTML CSS JavaScript Mastery course">
         <div class="card-icon-bg ci-1" aria-hidden="true">
           <i class="fas fa-laptop-code"></i>
@@ -952,80 +1036,7 @@
           </a>
         </div>
       </article>
-    </div>
-  </section>
 
-  <!-- ══ SOURCE CODE ════════════════════════════════════════ -->
-  <section id="source" class="page-section" aria-labelledby="source-title">
-    <div class="section-head fade-up">
-      <p class="section-eyebrow">Production Ready</p>
-      <h2 id="source-title">Source <em>Code</em> Templates</h2>
-      <p>Accelerate development with fully functional, clean project templates — request via WhatsApp.</p>
-    </div>
-    <div class="shop-grid">
-      <article class="shop-card fade-up" aria-label="Interactive Quiz App source code">
-        <div class="card-icon-bg ci-2" aria-hidden="true">
-          <i class="fas fa-question-circle"></i>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <h3 class="card-title">Interactive Quiz App</h3>
-            <span class="card-badge badge-code">{ } Code</span>
-          </div>
-          <p class="card-desc">Fully responsive quiz app with timer, score tracking, and admin panel. Clean, documented source code.</p>
-          <a
-            href="https://wa.me/2348185947780?text=Hi%21%20I%27m%20interested%20in%20the%20Quiz%20App%20source%20code"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-card-wa"
-            aria-label="Request Interactive Quiz App source code via WhatsApp"
-          >
-            <i class="fab fa-whatsapp" aria-hidden="true"></i> Request Source Code
-          </a>
-        </div>
-      </article>
-      <article class="shop-card fade-up" aria-label="Code Editor Project source code">
-        <div class="card-icon-bg ci-3" aria-hidden="true">
-          <i class="fas fa-edit"></i>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <h3 class="card-title">Code Editor Project</h3>
-            <span class="card-badge badge-code">{ } Code</span>
-          </div>
-          <p class="card-desc">In-browser code editor with syntax highlighting, live preview, and multi-language support.</p>
-          <a
-            href="https://wa.me/2348185947780?text=Hi%21%20I%27m%20interested%20in%20the%20Code%20Editor%20source%20code"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-card-wa"
-            aria-label="Request Code Editor source code via WhatsApp"
-          >
-            <i class="fab fa-whatsapp" aria-hidden="true"></i> Request Source Code
-          </a>
-        </div>
-      </article>
-      <article class="shop-card fade-up" aria-label="Custom Project Source Code">
-        <div class="card-icon-bg ci-1" aria-hidden="true">
-          <i class="fas fa-bolt"></i>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <h3 class="card-title">Custom Project Source Code</h3>
-            <span class="card-badge badge-code">✦ Custom</span>
-          </div>
-          <p class="card-desc">Any project idea — AI-powered generators, dashboards, landing pages and more. Built and delivered to spec.</p>
-          <a
-            href="https://wa.me/2348185947780?text=Hi%21%20I%20need%20source%20code%20for%20a%20custom%20project"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-card-wa"
-            aria-label="Request custom source code via WhatsApp"
-          >
-            <i class="fab fa-whatsapp" aria-hidden="true"></i> Request Custom Code
-          </a>
-        </div>
-      </article>
     </div>
   </section>
 
@@ -1078,30 +1089,6 @@
             </div>
           </div>
         </div>
-        <div class="bank-reveal">
-          <button class="btn-reveal" id="revealBankBtn" aria-expanded="false" aria-controls="bankDetails">
-            <i class="fas fa-lock" aria-hidden="true"></i>
-            <span id="revealBtnText">Reveal Bank Account Details</span>
-          </button>
-          <div class="bank-details" id="bankDetails" aria-live="polite">
-            <div class="bank-row">
-              <span>Account Name</span>
-              <strong>Chidera Emmanuel Ezenwa</strong>
-            </div>
-            <div class="bank-row">
-              <span>Account Number</span>
-              <strong>1953129048</strong>
-            </div>
-            <div class="bank-row">
-              <span>Bank</span>
-              <strong>Access Bank</strong>
-            </div>
-            <div class="bank-note">
-              <i class="fas fa-info-circle" aria-hidden="true"></i>
-              <span>After payment, send proof of transfer via WhatsApp to receive your product immediately.</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -1145,15 +1132,10 @@
 
   <!-- ══ FOOTER ════════════════════════════════════════════ -->
   <footer class="footer" role="contentinfo">
-    <div class="footer-logo" aria-label="CodeVent Digital">
-      <i class="fas fa-code" aria-hidden="true"></i>
-      CodeVent <span>Digital</span>
-    </div>
   <p>&copy; 2026 CodeVent Digital. All rights reserved.</p>
     <p class="footer-tagline">Building Developers One Step at a Time.</p>
     <p style="margin-top:0.5rem;font-size:0.78rem;"><a href="blog/index.html" target="_self">Blog</a> · <a href="/code-editor" target="_self">Code Editor</a> · <a href="/privacy" target="_self">Privacy</a> · <a href="/terms" target="_self">Terms</a> · <a href="/contact" target="_self">Contact</a> . <a href="/about" target="_self">About</a></p>
-  
-    
+
   </footer>
 
   <script>
@@ -1233,9 +1215,6 @@
       modalPreview:  document.getElementById('modalPreviewText'),
       modalPurchase: document.getElementById('modalPurchaseBtn'),
       closeModal:    document.getElementById('closeModal'),
-      revealBtn:     document.getElementById('revealBankBtn'),
-      revealBtnText: document.getElementById('revealBtnText'),
-      bankDetails:   document.getElementById('bankDetails'),
       body:          document.body,
     };
 
@@ -1319,15 +1298,6 @@
         if (dom.modal.classList.contains('active')) closeModalFn();
         if (dom.navLinks.classList.contains('active')) closeNav();
       }
-    });
-
-    dom.revealBtn.addEventListener('click', () => {
-      const isExpanded = dom.revealBtn.getAttribute('aria-expanded') === 'true';
-      const next = !isExpanded;
-      dom.revealBtn.setAttribute('aria-expanded', String(next));
-      dom.bankDetails.classList.toggle('visible', next);
-      dom.revealBtn.querySelector('i').className = next ? 'fas fa-unlock' : 'fas fa-lock';
-      dom.revealBtnText.textContent = next ? 'Hide Bank Account Details' : 'Reveal Bank Account Details';
     });
 
     document.querySelectorAll('a[href^="#"]').forEach(a => {
