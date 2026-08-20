@@ -7,7 +7,8 @@ CodeVent Digital is a web development training and digital product platform that
 🔗 **Live site:** [codeventdigital.site](https://codeventdigital.site)
 📧 **Email:** codeventdigitalinfo@gmail.com
 💬 **WhatsApp:** [+234 818 594 7780](https://wa.me/2348185947780)
-📍 **Based in:** Surulere, Lagos, Nigeria
+📺 **YouTube:** [@codeventdigital](https://youtube.com/@codeventdigital)
+🌍 **Based:** Online, worldwide — CodeVent Digital is a digital-first platform, not positioned as tied to any single physical location
 
 ---
 
@@ -59,7 +60,7 @@ and `toolkit.html` are:
 - `<meta name="robots" content="noindex, follow" />` in its `<head>`
 - Not listed in `sitemap.xml`
 - Still fully linked from the nav and footer on every other page, using the extensionless `/code-editor` path
-  (or `../code-editor` / `../code-editor.html` inside `/blog/`, matching each page's existing link style)
+  everywhere, including inside `/blog/` (`../code-editor`)
 
 This mirrors the exact pattern that fixed the earlier AdSense content-policy rejection: interactive tools stay
 linked and usable, but only genuine long-form content pages are indexable and listed in the sitemap. If you
@@ -78,6 +79,40 @@ ever add a new interactive tool page, follow this same pattern — noindex it an
 - No page loads more than one `adsbygoogle.js` script instance; ad `<ins>` units are commented out until the
   account is approved — uncomment per page when ready.
 
+## Site Audit & Technical SEO Pass (August 2026)
+
+- **Instagram → YouTube:** the Instagram footer icon/link (all pages, 13 instances including every blog article)
+  replaced with the official channel, `https://youtube.com/@codeventdigital`, using the `fa-youtube` icon and a
+  proper `aria-label`. No Instagram references remain anywhere in the repo.
+- **Hero messaging:** "Now Enrolling — Free Entry" (implied a temporary window; inaccurate — the platform has
+  been enrolling continuously) replaced with the evergreen "Build Your Developer Future".
+- **Lagos-based positioning removed:** CodeVent Digital is now consistently positioned as an online, global
+  platform in all company-facing copy (hero, trust line, homepage stats card, About/Terms/Contact, sitewide
+  footer location badge). The founder's personal bio (About page, blog author bylines) and individual
+  testimonial authors' locations were left untouched — those are personal facts, not company positioning.
+- **Blog URL architecture bug:** every internal link inside `/blog/` (nav, footer, cross-article links, "browse
+  all tutorials") was still pointing to `.html` filenames instead of the extensionless production paths used
+  everywhere else on the site. Fixed across all 6 blog files.
+- **Canonical / `og:url` mismatches:** all 5 blog articles had `<link rel="canonical">` and `og:url` pointing to
+  `.html` URLs while `sitemap.xml` listed the extensionless version — a direct cause of Search Console's
+  "Alternate page with proper canonical tag" / "Page with redirect" reports. Now aligned.
+- **Structured data:** `BlogPosting`/`Person` `url` fields in `blog/index.html` and all 5 articles were still
+  `.html` — fixed to match each page's canonical.
+- **`shop.html` domain bug:** `og:url` and the `Store` JSON-LD `url` pointed to the old
+  `emezch93.github.io/codevent-digital` GitHub Pages domain instead of `codeventdigital.site` — real duplicate-
+  content risk, now fixed.
+- **`blog/index.html` link inconsistency:** every other page linked to the blog via `blog/index.html`
+  (a `.html` filename) instead of `/blog/` — fixed sitewide.
+- **Removed 5 orphaned files** at repo root (`css-flexbox-tutorial.html`, `css-grid-layout-guide.html`,
+  `html-for-beginners-complete-guide.html`, `javascript-dom-manipulation-guide.html`,
+  `javascript-fetch-api-tutorial.html`) — stale duplicates of the real articles in `blog/`, not linked from
+  anywhere on the live site, left behind from an earlier upload.
+- **After uploading these fixes:** the affected URLs (homepage, About, Terms, Contact, Shop, and all 5 blog
+  articles) were already indexed before this pass, but their canonical/content signals changed. Use Search
+  Console's URL Inspection → **Request Indexing** on each, and resubmit `sitemap.xml`, to get Google to recrawl
+  and pick up the corrected canonicals and copy — an already-indexed URL doesn't get re-crawled automatically
+  just because the underlying page changed.
+
 ## URL Structure — Important
 
 Cloudflare Pages automatically strips `.html` from every URL and 301-redirects the `.html` version to the
@@ -93,8 +128,10 @@ must all point to the **extensionless** URL, not the filename:
   only the extensionless path.
 
 Mismatches here caused a full round of Google Search Console "Page with redirect" and "Alternate page with
-proper canonical tag" indexing issues in July–August 2026. If you add a new page, give it a canonical tag
-and internal links using the extensionless path from the start.
+proper canonical tag" indexing issues in July–August 2026, including inside `/blog/` where every internal link,
+canonical tag, and structured-data `url` field was still using `.html` filenames as of the August 2026 audit —
+now fixed sitewide. If you add a new page, give it a canonical tag and internal links using the extensionless
+path from the start.
 
 ## Tech Stack
 
