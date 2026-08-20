@@ -138,7 +138,7 @@ path from the start.
 - **Frontend:** HTML, CSS, Vanilla JavaScript — no framework, no build step
 - **Hosting:** Cloudflare Pages, custom domain (`codeventdigital.site`)
 - **PWA:** Full manifest + service worker (`sw.js`), installable, offline-capable
-- **AI Chat:** `chat.html` → Cloudflare Worker → Gemini 2.5 Flash (stateless backend, frontend owns memory via `localStorage`)
+- **AI Chat:** `chat.html` → Cloudflare Worker → Gemini 3.6 Flash (stateless backend, frontend owns memory via `localStorage`)
 - **Enrollment:** Google Form + linked Google Sheet, wired through `enroll-config.js`
 - **Analytics-free stat counters:** `counter.js` — IntersectionObserver-based, animates in view
 
