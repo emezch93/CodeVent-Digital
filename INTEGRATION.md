@@ -42,7 +42,7 @@ Paste this block inside `<head>` (replace or add alongside your existing meta ta
 <!-- ── /PWA ────────────────────────────────────────── -->
 ```
 
-Pages: `index.html`, `learning.html`, `community.html`, `testimonial.html`, `shop.html`, `contact.html`
+Pages: `index.html`, `learning.html`, `community.html`, `shop.html`, `contact.html`
 
 ---
 

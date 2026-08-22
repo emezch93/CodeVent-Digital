@@ -25,11 +25,10 @@ CodeVent Digital follows a four-stage roadmap:
 
 | Page | Purpose |
 |---|---|
-| `index.html` | Homepage — roadmap, stats, testimonials, sign in/up |
+| `index.html` | Homepage — roadmap, platform capabilities, sign in/up |
 | `learning.html` | Structured course curriculum |
 | `community.html` | WhatsApp groups, channel, and mentorship access |
 | `shop.html` | Digital products — eBooks, courses, source code |
-| `testimonial.html` | Learner success stories and platform stats |
 | `toolkit.html` | CodeVent Developer Toolkit — cheat sheets, checklists, templates, planners |
 | `blog/index.html` | Blog overview — free HTML/CSS/JS tutorials |
 | `blog/*.html` | Individual tutorial articles (long-form, SEO-optimized) |
@@ -113,6 +112,30 @@ ever add a new interactive tool page, follow this same pattern — noindex it an
   and pick up the corrected canonicals and copy — an already-indexed URL doesn't get re-crawled automatically
   just because the underlying page changed.
 
+## Credibility & Social Proof Pass (August 2026)
+
+CodeVent Digital does not use fabricated social proof. This pass removed unsubstantiated numbers and
+invented testimonials rather than replacing them with new invented figures:
+
+- **`testimonial.html` removed entirely.** The page presented fictional learner reviews (names, roles,
+  star ratings, avatars) as real. It has been deleted from the repo, `sitemap.xml`, both service worker
+  precache lists, and every nav/footer link across the site. `/testimonial` and `/testimonial.html` now
+  301 to `/community`, the closest genuine equivalent (real, live community access) rather than a fake
+  successor page.
+- **Homepage stats bar:** removed the "500+ Learners Enrolled" figure, which was not backed by verifiable
+  platform data. It was not replaced with a different invented number.
+- **Homepage trust line:** removed the fake avatar cluster, 5-star rating, and "Trusted by 500+ learners"
+  claim from the hero. Replaced with an accurate, verifiable statement ("Free to start — no credit card
+  required").
+- **Homepage social-proof section:** the three fabricated testimonial cards were replaced with a genuine
+  "Everything You Need, In One Place" section describing actual platform capabilities (Learning, Code
+  Editor, CodeVent AI, Community, Toolkit, Blog) — demonstrating value through the real product instead of
+  invented traction.
+- **The Learn → Build → Validate → Monetize framework is unchanged** — same four stages, same names,
+  same order, everywhere it appears.
+- No new numbers, ratings, avatars, or claims were invented to fill the space; genuine platform
+  information (courses, tools, pricing model) was used instead.
+
 ## URL Structure — Important
 
 Cloudflare Pages automatically strips `.html` from every URL and 301-redirects the `.html` version to the
@@ -150,7 +173,6 @@ codevent-digital/
 ├── learning.html
 ├── community.html
 ├── shop.html
-├── testimonial.html
 ├── toolkit.html
 ├── chat.html
 ├── blog/
