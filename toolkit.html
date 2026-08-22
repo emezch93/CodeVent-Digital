@@ -1469,6 +1469,9 @@ Give me a step-by-step plan starting with the simplest MVP version."</div></div>
   window.onload = () => {
     initNav();
     loadChecklistState();
+    // Deep-link support: /toolkit#sec-css opens straight to that section
+    const hash = window.location.hash.replace('#sec-', '');
+    if (hash) nav(hash);
   };
 </script>
   <script src="pwa-register.js"></script>
