@@ -5,7 +5,7 @@
 CodeVent Digital is a web development training and digital product platform that takes beginners from zero to shipping real projects through a structured, free-to-start learning path. It combines a curriculum, a community, a shop, and an AI-powered assistant into one connected experience.
 
 🔗 **Live site:** [codeventdigital.site](https://codeventdigital.site)
-📧 **Email:** codeventdigitalinfo@gmail.com
+📧 **Email:** hello@codeventdigital.site (secondary: codeventdigitalinfo@gmail.com)
 💬 **WhatsApp:** [+234 818 594 7780](https://wa.me/2348185947780)
 📺 **YouTube:** [@codeventdigital](https://youtube.com/@codeventdigital)
 🌍 **Based:** Online, worldwide — CodeVent Digital is a digital-first platform, not positioned as tied to any single physical location

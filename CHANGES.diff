@@ -1,0 +1,259 @@
+diff --git a/README.md b/README.md
+index 68a81b6..21b5dd8 100644
+--- a/README.md
++++ b/README.md
+@@ -5,7 +5,7 @@
+ CodeVent Digital is a web development training and digital product platform that takes beginners from zero to shipping real projects through a structured, free-to-start learning path. It combines a curriculum, a community, a shop, and an AI-powered assistant into one connected experience.
+ 
+ 🔗 **Live site:** [codeventdigital.site](https://codeventdigital.site)
+-📧 **Email:** codeventdigitalinfo@gmail.com
++📧 **Email:** hello@codeventdigital.site (secondary: codeventdigitalinfo@gmail.com)
+ 💬 **WhatsApp:** [+234 818 594 7780](https://wa.me/2348185947780)
+ 📺 **YouTube:** [@codeventdigital](https://youtube.com/@codeventdigital)
+ 🌍 **Based:** Online, worldwide — CodeVent Digital is a digital-first platform, not positioned as tied to any single physical location
+diff --git a/about.html b/about.html
+index ff13c71..54c2751 100644
+--- a/about.html
++++ b/about.html
+@@ -456,7 +456,8 @@
+     <h2>Get in Touch</h2>
+     <p>
+       Have a question, want to collaborate, or just want to say hello? Email
+-      <a class="inline-link" href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a>
++      <a class="inline-link" href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a>
++      (or <a class="inline-link" href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a>)
+       or visit our <a class="inline-link" href="/contact" target="_self">Contact page</a>.
+     </p>
+ 
+@@ -505,7 +506,8 @@
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/blog/css-flexbox-tutorial.html b/blog/css-flexbox-tutorial.html
+index 0dfc92a..6516ae3 100644
+--- a/blog/css-flexbox-tutorial.html
++++ b/blog/css-flexbox-tutorial.html
+@@ -485,7 +485,8 @@
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/blog/css-grid-layout-guide.html b/blog/css-grid-layout-guide.html
+index a2c805c..a95fd5b 100644
+--- a/blog/css-grid-layout-guide.html
++++ b/blog/css-grid-layout-guide.html
+@@ -477,7 +477,8 @@
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/blog/html-for-beginners-complete-guide.html b/blog/html-for-beginners-complete-guide.html
+index 46fb09b..8e43b9f 100644
+--- a/blog/html-for-beginners-complete-guide.html
++++ b/blog/html-for-beginners-complete-guide.html
+@@ -525,7 +525,8 @@
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/blog/index.html b/blog/index.html
+index 2f671a3..b8daa3f 100644
+--- a/blog/index.html
++++ b/blog/index.html
+@@ -435,7 +435,8 @@
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/blog/javascript-dom-manipulation-guide.html b/blog/javascript-dom-manipulation-guide.html
+index 3deecd5..4ce23a5 100644
+--- a/blog/javascript-dom-manipulation-guide.html
++++ b/blog/javascript-dom-manipulation-guide.html
+@@ -486,7 +486,8 @@ toggleBtn.addEventListener('click', () =&gt; {
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/blog/javascript-fetch-api-tutorial.html b/blog/javascript-fetch-api-tutorial.html
+index b7351e2..29adcd4 100644
+--- a/blog/javascript-fetch-api-tutorial.html
++++ b/blog/javascript-fetch-api-tutorial.html
+@@ -466,7 +466,8 @@ createPost('My First Post', 'Learning fetch is easier than I expected.');</code>
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/chat.html b/chat.html
+index 41e0788..8625fd4 100644
+--- a/chat.html
++++ b/chat.html
+@@ -1016,7 +1016,7 @@ Mission  : Teach complete beginners to build real things with HTML, CSS, and Jav
+ Website  : https://codeventdigital.site`,
+   "/contact": `codevent digital — All Contacts
+ 
+-Email        : codeventdigitalinfo@gmail.com
++Email        : hello@codeventdigital.site (or codeventdigitalinfo@gmail.com)
+ WhatsApp     : https://wa.me/2348185947780
+ Website      : https://codeventdigital.site
+ Shop         : https://codeventdigital.site/shop
+diff --git a/community.html b/community.html
+index 604a9d7..2b0e692 100644
+--- a/community.html
++++ b/community.html
+@@ -1024,6 +1024,10 @@
+         <h4>Contact</h4>
+         <ul class="footer-links">
+           <li>
++            <i class="fas fa-envelope" aria-hidden="true"></i>
++            <a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a>
++          </li>
++          <li style="font-size:0.85em;opacity:0.75;">
+             <i class="fas fa-envelope" aria-hidden="true"></i>
+             <a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a>
+           </li>
+diff --git a/contact.html b/contact.html
+index aee64ae..56c375a 100644
+--- a/contact.html
++++ b/contact.html
+@@ -388,11 +388,12 @@
+ 
+     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-bottom:2.5rem;">
+ 
+-      <a href="mailto:codeventdigitalinfo@gmail.com" target="_blank"
++      <a href="mailto:hello@codeventdigital.site" target="_blank"
+          style="display:block; background:var(--dark-2); border:1px solid var(--border); border-radius:0.75rem; padding:1.25rem; transition:var(--transition);">
+         <i class="fas fa-envelope" style="color:var(--accent); font-size:1.3rem; margin-bottom:0.6rem; display:block;"></i>
+         <strong style="color:white; display:block; margin-bottom:0.2rem;">Email</strong>
+-        <span style="color:var(--text-muted); font-size:0.88rem;">codeventdigitalinfo@gmail.com</span>
++        <span style="color:var(--text-muted); font-size:0.88rem;">hello@codeventdigital.site</span>
++        <span style="color:var(--text-muted); font-size:0.78rem; opacity:0.75; display:block; margin-top:0.2rem;">Or: codeventdigitalinfo@gmail.com</span>
+       </a>
+ 
+       <a href="https://wa.me/2348185947780" target="_blank" rel="noopener"
+@@ -474,7 +475,8 @@
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/index.html b/index.html
+index f46d5aa..8b6c7f8 100644
+--- a/index.html
++++ b/index.html
+@@ -1597,6 +1597,12 @@
+         <h4>Contact</h4>
+         <ul class="footer-links">
+           <li>
++            <a href="mailto:hello@codeventdigital.site" target="_blank">
++              <i class="fas fa-envelope" aria-hidden="true"></i>
++              hello@codeventdigital.site
++            </a>
++          </li>
++          <li style="font-size:0.85em;opacity:0.75;">
+             <a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">
+               <i class="fas fa-envelope" aria-hidden="true"></i>
+               codeventdigitalinfo@gmail.com
+diff --git a/privacy.html b/privacy.html
+index 9aa5fc4..4a87455 100644
+--- a/privacy.html
++++ b/privacy.html
+@@ -467,7 +467,8 @@
+     <h2>9. Contact Us</h2>
+     <p>
+       Questions about this policy? Email us at
+-      <a class="inline-link" href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a>
++      <a class="inline-link" href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a>
++      (or <a class="inline-link" href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a>)
+       or visit our <a class="inline-link" href="/contact" target="_self">Contact page</a>.
+     </p>
+ 
+@@ -516,7 +517,8 @@
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
+diff --git a/shop.html b/shop.html
+index cb0fa94..a16f5bc 100644
+--- a/shop.html
++++ b/shop.html
+@@ -1045,7 +1045,10 @@
+             <div class="contact-item-icon ci-email" aria-hidden="true"><i class="fas fa-envelope"></i></div>
+             <div class="contact-item-text">
+               <span class="contact-item-label">Email</span>
+-              <a href="mailto:codeventdigitalinfo@gmail.com" target="_blank" class="contact-item-link" aria-label="Email us">
++              <a href="mailto:hello@codeventdigital.site" target="_blank" class="contact-item-link" aria-label="Email us">
++                hello@codeventdigital.site
++              </a>
++              <a href="mailto:codeventdigitalinfo@gmail.com" target="_blank" class="contact-item-link" aria-label="Email us (secondary)" style="font-size:0.85em;opacity:0.75;">
+                 codeventdigitalinfo@gmail.com
+               </a>
+             </div>
+diff --git a/terms.html b/terms.html
+index 316ffc3..28630e1 100644
+--- a/terms.html
++++ b/terms.html
+@@ -476,7 +476,8 @@
+     <h2>13. Contact Us</h2>
+     <p>
+       Questions about these terms? Email
+-      <a class="inline-link" href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a>
++      <a class="inline-link" href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a>
++      (or <a class="inline-link" href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a>)
+       or visit our <a class="inline-link" href="/contact" target="_self">Contact page</a>.
+     </p>
+ 
+@@ -525,7 +526,8 @@
+       <div class="footer-col">
+         <h4>Contact</h4>
+         <ul class="footer-links">
+-          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
++          <li><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:hello@codeventdigital.site" target="_blank">hello@codeventdigital.site</a></li>
++          <li style="font-size:0.85em;opacity:0.75;"><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:codeventdigitalinfo@gmail.com" target="_blank">codeventdigitalinfo@gmail.com</a></li>
+           <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+2348185947780" target="_blank">+234 818 594 7780</a></li>
+           <li><i class="fab fa-whatsapp" aria-hidden="true"></i><a href="https://wa.me/2348185947780" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
+           <li><i class="fas fa-globe" aria-hidden="true"></i>Online, Worldwide</li>
