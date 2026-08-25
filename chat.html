@@ -728,6 +728,120 @@ header {
 .send-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--purple-glow); }
 .send-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
 
+/* ── ATTACH / MIC BUTTONS ── */
+.icon-btn {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+.icon-btn:hover { color: var(--green); border-color: rgba(0,229,160,0.3); }
+.icon-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.icon-btn.active,
+.mic-btn.recording {
+  background: rgba(255,80,80,0.12);
+  border-color: rgba(255,80,80,0.35);
+  color: #ff6b6b;
+  animation: mic-pulse 1.4s ease-in-out infinite;
+}
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,80,80,0.35); }
+  50%      { box-shadow: 0 0 0 8px rgba(255,80,80,0); }
+}
+
+/* ── FILE PREVIEW CHIP ── */
+.file-preview-bar {
+  display: none;
+  padding: 8px 14px 0;
+  flex-shrink: 0;
+}
+.file-preview-bar.show { display: block; }
+.file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 7px 8px 7px 12px;
+  font-size: 0.78rem;
+  color: var(--text);
+}
+.file-chip i.fa-paperclip { color: var(--green); }
+.file-chip .file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+}
+.file-chip .file-size { color: var(--text-dim); flex-shrink: 0; }
+.file-chip .remove-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.file-chip .remove-btn:hover { color: #ff6b6b; background: rgba(255,80,80,0.1); }
+
+/* ── COMPOSER ERROR ── */
+.composer-error {
+  display: none;
+  padding: 6px 16px 0;
+  font-size: 0.75rem;
+  color: #ff9090;
+  flex-shrink: 0;
+}
+.composer-error.show { display: block; }
+
+/* ── RECORDING INDICATOR ── */
+.rec-indicator {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  background: rgba(6,8,16,0.97);
+  flex-shrink: 0;
+}
+.rec-indicator.show { display: flex; }
+.rec-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #ff5050;
+  flex-shrink: 0;
+  animation: rec-blink 1s ease-in-out infinite;
+}
+@keyframes rec-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+.rec-label { flex: 1; font-size: 0.82rem; color: var(--text); }
+.rec-time { font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 0.8rem; }
+.rec-stop-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  background: #ff5050;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.rec-stop-btn:hover { background: #ff6b6b; }
+.rec-processing { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-muted); }
+.rec-processing .t-dot { width: 6px; height: 6px; }
+
 /* Footer links */
 .footer-strip {
   display: flex;
@@ -898,12 +1012,34 @@ header {
     </div>
   </div>
 
+  <div class="file-preview-bar" id="filePreviewBar"></div>
+  <div class="composer-error" id="composerError"></div>
+
+  <div class="rec-indicator" id="recIndicator">
+    <div class="rec-dot"></div>
+    <div class="rec-label" id="recLabel">Recording your question...</div>
+    <div class="rec-time" id="recTime">0:00</div>
+    <button class="rec-stop-btn" id="recStopBtn" onclick="stopRecording()">
+      <i class="fas fa-stop"></i> Stop
+    </button>
+  </div>
+
+  <input type="file" id="fileInput" style="display:none"
+    accept=".pdf,.txt,.md,.markdown,.csv,.docx,.png,.jpg,.jpeg,.gif,.webp,.js,.ts,.jsx,.tsx,.py,.html,.css,.json,.java,.c,.cpp,.cs,.go,.rb,.php,.sql,.sh,.yml,.yaml"
+    onchange="handleFileSelected(event)">
+
   <div class="input-wrap">
+    <button class="icon-btn" id="attachBtn" title="Attach a file" onclick="triggerFilePick()">
+      <i class="fas fa-paperclip"></i>
+    </button>
     <textarea id="userInput"
       placeholder="Ask a question or type a command..."
       rows="1"
       onkeydown="handleKey(event)"
       oninput="autoResize(this)"></textarea>
+    <button class="icon-btn mic-btn" id="micBtn" title="Ask by voice" onclick="toggleRecording()">
+      <i class="fas fa-microphone"></i>
+    </button>
     <button class="send-btn" id="sendBtn" onclick="sendMessage()">
       <i class="fas fa-paper-plane"></i>
     </button>
@@ -939,6 +1075,20 @@ header {
 // ── CONFIG ──────────────────────────────────────────────────────────────────
 const WORKER_URL = "https://broken-boat-b484.emezch93.workers.dev/";
 const BOT_IMG    = "IMG_20260511_000139_691.jpg";
+
+// ── FILE + AUDIO CONFIG ───────────────────────────────────────────────────────
+const MAX_TEXT_FILE_BYTES   = 2 * 1024 * 1024;   // 2MB for text/code/csv/md/docx
+const MAX_BINARY_FILE_BYTES = 6 * 1024 * 1024;   // 6MB for images/pdf
+const MAX_TEXT_CHARS_SENT   = 120000;            // char cap forwarded to the AI
+const MAX_RECORDING_SECONDS = 180;               // auto-stop after 3 minutes
+
+const TEXT_EXTENSIONS = [
+  "txt","md","markdown","csv","js","ts","jsx","tsx","py","html","css","json",
+  "java","c","cpp","cs","go","rb","php","sql","sh","yml","yaml"
+];
+const BINARY_EXTENSIONS = { pdf: "application/pdf", png: "image/png", jpg: "image/jpeg",
+  jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp" };
+const DOCX_EXTENSIONS = ["docx"];
 
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
@@ -1085,6 +1235,13 @@ let history        = [];       // Runtime conversation history [{role, content}]
 let sessionTopics  = [];       // Topics detected this session
 let msgCount       = 0;        // AI API message count (excludes local cmds)
 let isFetching     = false;    // Guard against concurrent requests
+let selectedFile   = null;     // { filename, mimeType, kind: 'text'|'binary', content|data, sizeLabel }
+let mediaRecorder  = null;
+let audioChunks    = [];
+let recordingStream = null;
+let recordingTimerInterval = null;
+let recordingSeconds = 0;
+let isProcessingAudio = false;
 const HISTORY_KEY    = "cv_history_v3";
 const NAME_KEY       = "cv_name_v2";
 const MAX_HISTORY    = 30;     // Max entries stored (15 turns — optimal for Gemini)
@@ -1227,6 +1384,13 @@ function resetSession() {
 }
 
 // ── RENDER ───────────────────────────────────────────────────────────────────
+function escapeHtml(raw) {
+  return String(raw)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 function renderText(raw) {
   let text = raw
     .replace(/&/g, "&amp;")
@@ -1255,17 +1419,20 @@ function getTime() {
   return now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-function appendUser(text) {
+function appendUser(text, attachmentLabel = null) {
   const c = document.getElementById("messages");
   const w = document.createElement("div");
   w.className = "msg user";
+  const attachHtml = attachmentLabel
+    ? `<div style="margin-top:6px;font-size:0.72rem;color:var(--text-dim);"><i class="fas fa-paperclip"></i> ${escapeHtml(attachmentLabel)}</div>`
+    : "";
   w.innerHTML = `
     <div class="msg-meta">
       <div class="msg-avatar user-av">${studentInitial || "S"}</div>
       <div class="msg-label">${studentName || "YOU"}</div>
       <div class="msg-time">${getTime()}</div>
     </div>
-    <div class="bubble">${renderText(text)}</div>`;
+    <div class="bubble">${renderText(text)}${attachHtml}</div>`;
   c.appendChild(w);
   c.scrollTop = c.scrollHeight;
 }
@@ -1358,16 +1525,421 @@ function buildAICommandMessage(cmd) {
   return map[cmd] || `Student name: ${studentName}. ${cmd}`;
 }
 
+// ── COMPOSER ERROR HELPER ────────────────────────────────────────────────────
+function showComposerError(msg) {
+  const el = document.getElementById("composerError");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(showComposerError._t);
+  showComposerError._t = setTimeout(() => el.classList.remove("show"), 5000);
+}
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+// ── FILE ATTACHMENT ──────────────────────────────────────────────────────────
+function triggerFilePick() {
+  if (isFetching || isProcessingAudio) return;
+  document.getElementById("fileInput").click();
+}
+
+async function handleFileSelected(event) {
+  const file = event.target.files[0];
+  event.target.value = ""; // allow re-selecting the same file later
+  if (!file) return;
+
+  const ext = (file.name.split(".").pop() || "").toLowerCase();
+  const isText   = TEXT_EXTENSIONS.includes(ext);
+  const isBinary = Object.prototype.hasOwnProperty.call(BINARY_EXTENSIONS, ext);
+  const isDocx   = DOCX_EXTENSIONS.includes(ext);
+
+  if (!isText && !isBinary && !isDocx) {
+    showComposerError(`"${ext || "this file"}" isn't supported. Try PDF, TXT, MD, CSV, DOCX, images, or common code files.`);
+    return;
+  }
+
+  try {
+    if (isBinary) {
+      if (file.size > MAX_BINARY_FILE_BYTES) {
+        showComposerError(`That file is too large (${formatBytes(file.size)}). Max size for PDFs/images is ${formatBytes(MAX_BINARY_FILE_BYTES)}.`);
+        return;
+      }
+      const dataUrl = await readFileAsDataURL(file);
+      const base64  = dataUrl.split(",")[1];
+      selectedFile = {
+        filename: file.name,
+        mimeType: BINARY_EXTENSIONS[ext] || file.type || "application/octet-stream",
+        kind: "binary",
+        data: base64,
+        sizeLabel: formatBytes(file.size),
+      };
+    } else if (isDocx) {
+      if (file.size > MAX_TEXT_FILE_BYTES) {
+        showComposerError(`That file is too large (${formatBytes(file.size)}). Max size for DOCX is ${formatBytes(MAX_TEXT_FILE_BYTES)}.`);
+        return;
+      }
+      const buffer = await file.arrayBuffer();
+      let text;
+      try {
+        text = await extractDocxText(buffer);
+      } catch (e) {
+        showComposerError("Couldn't read that DOCX file in this browser. Try saving it as PDF or TXT instead.");
+        return;
+      }
+      if (!text || !text.trim()) {
+        showComposerError("No readable text found in that DOCX file.");
+        return;
+      }
+      selectedFile = {
+        filename: file.name,
+        mimeType: "text/plain",
+        kind: "text",
+        content: text.slice(0, MAX_TEXT_CHARS_SENT),
+        sizeLabel: formatBytes(file.size),
+      };
+    } else {
+      if (file.size > MAX_TEXT_FILE_BYTES) {
+        showComposerError(`That file is too large (${formatBytes(file.size)}). Max size for text/code files is ${formatBytes(MAX_TEXT_FILE_BYTES)}.`);
+        return;
+      }
+      const text = await readFileAsText(file);
+      selectedFile = {
+        filename: file.name,
+        mimeType: "text/plain",
+        kind: "text",
+        content: text.slice(0, MAX_TEXT_CHARS_SENT),
+        sizeLabel: formatBytes(file.size),
+      };
+    }
+    renderFilePreview();
+  } catch (e) {
+    console.error("[CV] File read error:", e);
+    showComposerError("Something went wrong reading that file. Please try again.");
+  }
+}
+
+function readFileAsText(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload  = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+    r.readAsText(file);
+  });
+}
+
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload  = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(file);
+  });
+}
+
+function renderFilePreview() {
+  const bar = document.getElementById("filePreviewBar");
+  if (!selectedFile) {
+    bar.classList.remove("show");
+    bar.innerHTML = "";
+    return;
+  }
+  bar.innerHTML = `
+    <div class="file-chip">
+      <i class="fas fa-paperclip"></i>
+      <span class="file-name">${escapeHtml(selectedFile.filename)}</span>
+      <span class="file-size">${selectedFile.sizeLabel}</span>
+      <button class="remove-btn" onclick="clearSelectedFile()" title="Remove file"><i class="fas fa-xmark"></i></button>
+    </div>`;
+  bar.classList.add("show");
+}
+
+function clearSelectedFile() {
+  selectedFile = null;
+  renderFilePreview();
+}
+
+// ── MINIMAL DOCX TEXT EXTRACTION (no external libraries) ────────────────────
+// Reads the ZIP central directory, inflates word/document.xml with the
+// browser's built-in DecompressionStream, then strips XML markup.
+async function extractDocxText(arrayBuffer) {
+  if (typeof DecompressionStream === "undefined") {
+    throw new Error("DecompressionStream unsupported in this browser");
+  }
+  const view = new DataView(arrayBuffer);
+  const bytes = new Uint8Array(arrayBuffer);
+
+  // Find End Of Central Directory record (signature 0x06054b50)
+  let eocd = -1;
+  for (let i = bytes.length - 22; i >= 0; i--) {
+    if (view.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd === -1) throw new Error("Not a valid ZIP/DOCX file");
+
+  const entryCount   = view.getUint16(eocd + 10, true);
+  let cdOffset       = view.getUint32(eocd + 16, true);
+
+  let targetLocalOffset = -1;
+  let targetCompSize    = 0;
+  let targetMethod      = -1;
+
+  for (let i = 0; i < entryCount; i++) {
+    if (view.getUint32(cdOffset, true) !== 0x02014b50) break;
+    const method       = view.getUint16(cdOffset + 10, true);
+    const compSize     = view.getUint32(cdOffset + 20, true);
+    const nameLen      = view.getUint16(cdOffset + 28, true);
+    const extraLen     = view.getUint16(cdOffset + 30, true);
+    const commentLen   = view.getUint16(cdOffset + 32, true);
+    const localOffset  = view.getUint32(cdOffset + 42, true);
+    const nameBytes    = bytes.slice(cdOffset + 46, cdOffset + 46 + nameLen);
+    const name         = new TextDecoder().decode(nameBytes);
+
+    if (name === "word/document.xml") {
+      targetLocalOffset = localOffset;
+      targetCompSize    = compSize;
+      targetMethod      = method;
+      break;
+    }
+    cdOffset += 46 + nameLen + extraLen + commentLen;
+  }
+
+  if (targetLocalOffset === -1) throw new Error("word/document.xml not found");
+
+  // Parse local file header to find actual data offset
+  const lfNameLen  = view.getUint16(targetLocalOffset + 26, true);
+  const lfExtraLen = view.getUint16(targetLocalOffset + 28, true);
+  const dataStart  = targetLocalOffset + 30 + lfNameLen + lfExtraLen;
+  const compData   = bytes.slice(dataStart, dataStart + targetCompSize);
+
+  let xmlBytes;
+  if (targetMethod === 0) {
+    xmlBytes = compData; // stored, no compression
+  } else {
+    const ds = new DecompressionStream("deflate-raw");
+    const stream = new Blob([compData]).stream().pipeThrough(ds);
+    const buf = await new Response(stream).arrayBuffer();
+    xmlBytes = new Uint8Array(buf);
+  }
+
+  const xml = new TextDecoder("utf-8").decode(xmlBytes);
+
+  // Insert line breaks at paragraph boundaries, then strip all tags
+  let text = xml
+    .replace(/<\/w:p>/g, "\n")
+    .replace(/<w:tab\/>/g, "\t")
+    .replace(/<[^>]+>/g, "");
+
+  // Decode basic XML entities
+  text = text
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
+
+  return text.replace(/\n{3,}/g, "\n\n").trim();
+}
+
+// ── AUDIO QUESTION INPUT ──────────────────────────────────────────────────────
+function pickAudioMimeType() {
+  const candidates = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/ogg;codecs=opus",
+    "audio/mp4",
+  ];
+  for (const c of candidates) {
+    if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c)) {
+      return c;
+    }
+  }
+  return "";
+}
+
+async function toggleRecording() {
+  if (isFetching || isProcessingAudio) return;
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    stopRecording();
+    return;
+  }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showComposerError("Voice input isn't supported in this browser.");
+    return;
+  }
+
+  try {
+    recordingStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) {
+    showComposerError("Microphone access was denied. Please allow microphone permission to ask by voice.");
+    return;
+  }
+
+  const mimeType = pickAudioMimeType();
+  try {
+    mediaRecorder = mimeType
+      ? new MediaRecorder(recordingStream, { mimeType })
+      : new MediaRecorder(recordingStream);
+  } catch (e) {
+    showComposerError("Couldn't start recording on this device.");
+    stopRecordingStream();
+    return;
+  }
+
+  audioChunks = [];
+  recordingSeconds = 0;
+
+  mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+  mediaRecorder.onstop = handleRecordingStopped;
+
+  mediaRecorder.start();
+  document.getElementById("micBtn").classList.add("recording");
+  document.getElementById("recIndicator").classList.add("show");
+  updateRecTime();
+  recordingTimerInterval = setInterval(() => {
+    recordingSeconds++;
+    updateRecTime();
+    if (recordingSeconds >= MAX_RECORDING_SECONDS) stopRecording();
+  }, 1000);
+}
+
+function updateRecTime() {
+  const m = Math.floor(recordingSeconds / 60);
+  const s = recordingSeconds % 60;
+  document.getElementById("recTime").textContent = `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    mediaRecorder.stop();
+  }
+  clearInterval(recordingTimerInterval);
+  document.getElementById("micBtn").classList.remove("recording");
+  document.getElementById("recIndicator").classList.remove("show");
+}
+
+function stopRecordingStream() {
+  if (recordingStream) {
+    recordingStream.getTracks().forEach(t => t.stop());
+    recordingStream = null;
+  }
+}
+
+async function handleRecordingStopped() {
+  stopRecordingStream();
+  const mimeType = mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType.split(";")[0] : "audio/webm";
+  if (!audioChunks.length) return;
+  const blob = new Blob(audioChunks, { type: mimeType });
+  audioChunks = [];
+
+  if (blob.size < 800) {
+    showComposerError("That recording was too short. Try again.");
+    return;
+  }
+  if (blob.size > 10 * 1024 * 1024) {
+    showComposerError("That recording is too long. Please keep questions under 3 minutes.");
+    return;
+  }
+
+  await sendAudioMessage(blob, mimeType);
+}
+
+async function sendAudioMessage(blob, mimeType) {
+  if (isFetching) return;
+  isProcessingAudio = true;
+  document.getElementById("micBtn").disabled = true;
+  document.getElementById("sendBtn").disabled = true;
+
+  const dataUrl = await readFileAsDataURL(blob);
+  const base64  = dataUrl.split(",")[1];
+
+  appendTyping();
+
+  const MAX_RETRIES = 2;
+  let result = null;
+  let lastErr = "network";
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), 30000);
+    try {
+      const res = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          message    : "(voice question)",
+          studentName: studentName,
+          topics     : sessionTopics.join(", ") || "none yet",
+          sessionId  : SESSION_ID,
+          history    : buildHistoryPayload(15),
+          audio      : { mimeType, data: base64 },
+        }),
+      });
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        lastErr = `http_${res.status}`;
+        if (attempt < MAX_RETRIES) { await new Promise(r => setTimeout(r, 2000)); continue; }
+        break;
+      }
+      const data = await res.json();
+      if (!data.reply) {
+        lastErr = "empty";
+        if (attempt < MAX_RETRIES) { await new Promise(r => setTimeout(r, 1500)); continue; }
+        break;
+      }
+      result = data;
+      break;
+    } catch (e) {
+      clearTimeout(timeoutId);
+      lastErr = e.name === "AbortError" ? "timeout" : "network";
+      if (attempt < MAX_RETRIES) { await new Promise(r => setTimeout(r, 2000)); continue; }
+    }
+  }
+
+  removeTyping();
+
+  if (result) {
+    const transcript = (result.transcript || "(voice message)").trim();
+    appendUser(transcript, "Sent by voice");
+    pushToHistory("user", transcript);
+    trackTopics(transcript);
+    msgCount++;
+    updateCount();
+
+    appendBot(result.reply.trim());
+    pushToHistory("assistant", result.reply.trim());
+    trackTopics(result.reply.trim());
+  } else {
+    const errMessages = {
+      timeout: `${studentName}, the voice request timed out. Please try again.`,
+      network: `${studentName}, there was a connection error processing your voice message.`,
+      empty  : `${studentName}, I couldn't understand that recording. Please try again.`,
+    };
+    appendBot(errMessages[lastErr] || `${studentName}, something went wrong processing your voice message. Please try again.`, true);
+  }
+
+  isProcessingAudio = false;
+  document.getElementById("micBtn").disabled = false;
+  document.getElementById("sendBtn").disabled = false;
+  scrollToBottom();
+}
+
 // ── SEND — stable memory, retry, timeout, dedup ─────────────────────────────
 async function sendMessage() {
   if (isFetching) return; // Prevent concurrent requests
 
   const inp  = document.getElementById("userInput");
   const text = inp.value.trim();
-  if (!text) return;
+  const attachment = selectedFile; // snapshot — cleared right after this send
+  if (!text && !attachment) return;
 
   inp.value = "";
   inp.style.height = "auto";
+  selectedFile = null;
+  renderFilePreview();
 
   const cmd_lower = text.toLowerCase();
 
@@ -1404,12 +1976,13 @@ async function sendMessage() {
   isFetching = true;
   document.getElementById("sendBtn").disabled = true;
 
-  appendUser(text);
+  const displayText = text || (attachment ? `Please review this file: ${attachment.filename}` : text);
+  appendUser(displayText, attachment ? attachment.filename : null);
   appendTyping();
-  trackTopics(text);
+  trackTopics(displayText);
 
   // For history, store the display text (the command), not the enriched prompt
-  pushToHistory("user", text);
+  pushToHistory("user", displayText);
 
   msgCount++;
   updateCount();
@@ -1431,11 +2004,18 @@ async function sendMessage() {
         body: JSON.stringify({
           message    : LOCAL_CMDS[cmd_lower] === "__AI__"
             ? buildAICommandMessage(cmd_lower)
-            : text,
+            : (text || "Please review the attached file and share what's most useful for me to know."),
           studentName: studentName,
           topics     : sessionTopics.join(", ") || "none yet",
           sessionId  : SESSION_ID,
           history    : buildHistoryPayload(15),
+          attachment : attachment ? {
+            filename: attachment.filename,
+            mimeType: attachment.mimeType,
+            kind    : attachment.kind,
+            data    : attachment.kind === "binary" ? attachment.data    : undefined,
+            content : attachment.kind === "text"   ? attachment.content : undefined,
+          } : undefined,
         }),
       });
 
