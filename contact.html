@@ -419,6 +419,28 @@
 
     </div>
 
+    <h2>Send Us a Request</h2>
+    <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:1rem;">
+      Prefer a written record? Submit a support request below and we'll email you a reference number,
+      then follow up at the email address you provide.
+    </p>
+
+    <form id="supportRequestForm" style="display:grid; gap:0.85rem; max-width:520px; margin-bottom:1rem;">
+      <input type="text" id="reqName" name="customerName" placeholder="Your name" required
+        style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.7rem 0.9rem; border-radius:0.6rem; font-family:inherit; font-size:0.92rem;" />
+      <input type="email" id="reqEmail" name="customerEmail" placeholder="Your email" required
+        style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.7rem 0.9rem; border-radius:0.6rem; font-family:inherit; font-size:0.92rem;" />
+      <input type="text" id="reqSubject" name="subject" placeholder="Subject" required
+        style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.7rem 0.9rem; border-radius:0.6rem; font-family:inherit; font-size:0.92rem;" />
+      <textarea id="reqMessage" name="message" placeholder="How can we help?" required rows="5"
+        style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.7rem 0.9rem; border-radius:0.6rem; font-family:inherit; font-size:0.92rem; resize:vertical;"></textarea>
+      <button type="submit" id="reqSubmitBtn"
+        style="background:var(--primary); color:white; border:none; padding:0.75rem 1.4rem; border-radius:0.6rem; font-weight:600; cursor:pointer; font-size:0.92rem; width:fit-content;">
+        Submit Request
+      </button>
+      <div id="reqStatusMsg" style="font-size:0.85rem;"></div>
+    </form>
+
     <h2>Join Our Community</h2>
     <p>Prefer to ask questions alongside other learners? Join one of our WhatsApp spaces:</p>
     <ul>
@@ -528,5 +550,51 @@
     })();
   </script>
   <script src="pwa-register.js"></script>
+
+  <!-- ══ SUPPORT REQUEST FORM ═══════════════════════════ -->
+  <script>
+    (function () {
+      const WORKER_URL = "https://codevent-digital-admin-api.emezch93.workers.dev";
+      const form = document.getElementById('supportRequestForm');
+      const statusMsg = document.getElementById('reqStatusMsg');
+      const submitBtn = document.getElementById('reqSubmitBtn');
+      if (!form) return;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusMsg.textContent = '';
+        statusMsg.style.color = '';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+
+        const payload = {
+          customerName: document.getElementById('reqName').value.trim(),
+          customerEmail: document.getElementById('reqEmail').value.trim(),
+          subject: document.getElementById('reqSubject').value.trim(),
+          message: document.getElementById('reqMessage').value.trim(),
+        };
+
+        try {
+          const res = await fetch(`${WORKER_URL}/api/requests`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (!res.ok || data.ok === false) throw new Error(data.error || 'Something went wrong.');
+
+          statusMsg.style.color = 'var(--accent)';
+          statusMsg.textContent = `Thanks! Your reference number is ${data.requestId}. Check your email for confirmation.`;
+          form.reset();
+        } catch (err) {
+          statusMsg.style.color = '#ff5b6a';
+          statusMsg.textContent = err.message || 'Failed to submit. Please try again or email us directly.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Request';
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
