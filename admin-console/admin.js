@@ -1,11 +1,3 @@
-// ══════════════════════════════════════════════════════════════
-// admin.js — CodeVent Digital Admin Console
-// Reuses the existing Firebase Authentication setup (auth.js /
-// firebase-config.js) already used by the public site. Admin
-// AUTHORIZATION (not just authentication) is verified server-side
-// by the Worker — this file never trusts a client-side flag.
-// ══════════════════════════════════════════════════════════════
-
 import { onAuthChange, logIn, logOut, friendlyError, currentUser } from "../auth.js";
 import { WORKER_URL } from "./admin-config.js";
 
