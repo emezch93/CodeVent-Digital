@@ -1,1 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CodeVent Digital — Admin Console</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.0/index.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.0/index.css" />
+<style>
+  :root {
+    --bg: #0b1020; --panel: #ffffff; --panel-2: #f7f8fc; --border: #e5e7ef;
+    --text: #0f172a; --muted: #64748b; --brand: #4f46e5; --brand-2: #6366f1;
+    --brand-soft: #eef2ff; --success: #10b981; --success-soft: #ecfdf5;
+    --warn: #f59e0b; --warn-soft: #fffbeb; --danger: #ef4444; --danger-soft: #fef2f2;
+    --shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--panel-2); color: var(--text); font-size: 14px; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  button { font-family: inherit; cursor: pointer; }
+  a { color: var(--brand); text-decoration: none; }
+  
+  /* Layout */
+  .login-wrap { min-height: 100vh; display: grid; place-items: center; background: linear-gradient(180deg, #f8fafc, #eef2ff); padding: 24px; }
+  .login-card { width: 100%; max-width: 400px; background: #fff; border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); padding: 28px; }
+  .app { display: none; min-height: 100vh; }
+  .app.active { display: grid; grid-template-columns: 240px 1fr; }
+  @media (max-width: 768px) { .app.active { grid-template-columns: 1fr; } }
+  
+  /* Sidebar */
+  .sidebar { background: var(--bg); color: #cbd5e1; padding: 18px 14px; display: flex; flex-direction: column; gap: 6px; position: sticky; top: 0; height: 100vh; }
+  .side-brand { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; border-bottom: 1px solid #1f2a4a; margin-bottom: 10px; }
+  .brand-logo { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), var(--brand-2)); display: grid; place-items: center; color: #fff; font-weight: 700; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; cursor: pointer; color: #cbd5e1; font-weight: 500; }
+  .nav-item:hover { background: #111a38; color: #fff; }
+  .nav-item.active { background: rgba(99,102,241,.2); color: #fff; }
+  .side-foot { margin-top: auto; padding-top: 14px; border-top: 1px solid #1f2a4a; font-size: 12px; color: #94a3b8; }
+  
+  /* Main */
+  .main { padding: 22px 26px; min-width: 0; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .topbar h2 { margin: 0; font-size: 20px; }
+  .page { display: none; }
+  .page.active { display: block; }
+  
+  /* Components */
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; margin-bottom: 16px; }
+  .grid { display: grid; gap: 14px; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+  .stat .label { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; }
+  .stat .value { font-size: 28px; font-weight: 700; margin-top: 4px; }
+  
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .field label { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .field input, .field textarea, .field select { border: 1px solid var(--border); background: #fff; border-radius: 10px; padding: 10px 12px; font: inherit; color: var(--text); outline: none; }
+  .field input:focus, .field textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(79,70,229,.12); }
+  
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--border); background: #fff; color: var(--text); padding: 10px 14px; border-radius: 10px; font-weight: 600; transition: .15s; }
+  .btn:hover { background: var(--panel-2); }
+  .btn-primary { background: linear-gradient(180deg, var(--brand), var(--brand-2)); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(79,70,229,.3); }
+  .btn-primary:hover { filter: brightness(1.05); }
+  .btn-block { width: 100%; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  
+  .chip { display: inline-flex; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .chip.new { background: var(--brand-soft); color: var(--brand); }
+  .chip.in_progress { background: var(--warn-soft); color: #92400e; }
+  .chip.resolved { background: var(--success-soft); color: #065f46; }
+  
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; text-transform: uppercase; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--panel-2); }
+  td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr { cursor: pointer; transition: background .12s; }
+  tr:hover { background: var(--panel-2); }
+  
+  .error { background: var(--danger-soft); color: #991b1b; border: 1px solid #fecaca; padding: 10px; border-radius: 10px; font-size: 13px; margin-bottom: 12px; }
+  .hidden { display: none !important; }
+  .toasts { position: fixed; top: 18px; right: 18px; display: flex; flex-direction: column; gap: 8px; z-index: 100; }
+  .toast { background: #0f172a; color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 13px; animation: slideIn .2s ease-out; }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--danger); }
+  @keyframes slideIn { from { transform: translateY(-6px); opacity: 0; } to { transform: none; opacity: 1; } }
+</style>
+</head>
+<body>
 
+<!-- LOGIN VIEW -->
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+      <div class="brand-logo">C</div>
+      <div><div style="font-weight:700">CodeVent Digital</div><div style="color:var(--muted);font-size:12px">Admin Console</div></div>
+    </div>
+    <h2 style="margin:0 0 4px">Sign in</h2>
+    <p style="color:var(--muted);margin:0 0 18px;font-size:13px">Administrator access only.</p>
+    <div id="authError" class="error hidden"></div>
+    
+    <div class="field"><label>Email</label><input id="siEmail" type="email" autocomplete="email" /></div>
+    <div class="field"><label>Password</label><input id="siPassword" type="password" autocomplete="current-password" /></div>
+    <button class="btn btn-primary btn-block" id="btnSignIn">Sign in</button>
+    <div style="display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;margin:14px 0"><div style="flex:1;height:1px;background:var(--border)"></div>or<div style="flex:1;height:1px;background:var(--border)"></div></div>
+    <button class="btn btn-block" id="btnGoogle">Continue with Google</button>
+  </div>
+</div>
+
+<!-- APP VIEW -->
+<div id="appView" class="app">
+  <aside class="sidebar">
+    <div class="side-brand">
+      <div class="brand-logo">C</div>
+      <div><div style="color:#fff;font-size:14px;font-weight:700">Admin Console</div><div style="color:#94a3b8;font-size:11px">CodeVent Digital</div></div>
+    </div>
+    <div class="nav-item active" data-page="dashboard">Dashboard</div>
+    <div class="nav-item" data-page="requests">Requests</div>
+    <div class="nav-item" data-page="newrequest">New Request</div>
+    <div class="nav-item" data-page="setup">Setup Guide</div>
+    <div class="side-foot">
+      <div id="sideUser" style="color:#fff;font-weight:600;margin-bottom:4px">—</div>
+      <button class="btn" id="btnSignOut" style="padding:6px 10px;font-size:12px;color:#cbd5e1;background:transparent;border-color:#1f2a4a">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- Dashboard -->
+    <section class="page active" id="page-dashboard">
+      <div class="topbar"><h2>Overview</h2><button class="btn" id="btnRefreshDash">Refresh</button></div>
+      <div class="grid grid-4" style="margin-bottom:16px">
+        <div class="card stat"><div class="label">Total</div><div class="value" id="statTotal">—</div></div>
+        <div class="card stat"><div class="label">New</div><div class="value" id="statNew">—</div></div>
+        <div class="card stat"><div class="label">In Progress</div><div class="value" id="statInProgress">—</div></div>
+        <div class="card stat"><div class="label">Resolved</div><div class="value" id="statResolved">—</div></div>
+      </div>
+      <div class="card"><h3 style="margin:0 0 12px;font-size:15px">Recent Requests</h3><div id="recentTable"></div></div>
+    </section>
+
+    <!-- Requests List -->
+    <section class="page" id="page-requests">
+      <div class="topbar"><h2>Customer Requests</h2><button class="btn btn-primary" data-page="newrequest">+ New</button></div>
+      <div class="card">
+        <div class="row" style="margin-bottom:12px">
+          <input id="searchInput" placeholder="Search ID, name, or email…" style="flex:1;border:1px solid var(--border);border-radius:10px;padding:10px 12px" />
+          <select id="statusFilter" style="border:1px solid var(--border);border-radius:10px;padding:10px 12px">
+            <option value="">All Statuses</option>
+            <option value="new">New</option>
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        <div id="requestsTable"></div>
+      </div>
+    </section>
+
+    <!-- Request Detail -->
+    <section class="page" id="page-detail">
+      <div class="topbar">
+        <h2 id="detailTitle">Request</h2>
+        <button class="btn" data-page="requests">← Back</button>
+      </div>
+      <div id="detailBody"><div class="card" style="text-align:center;padding:40px;color:var(--muted)">Loading…</div></div>
+    </section>
+
+    <!-- New Request Form -->
+    <section class="page" id="page-newrequest">
+      <div class="topbar"><h2>Submit Customer Request</h2></div>
+      <div class="card" style="max-width:700px">
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="field"><label>Customer Name</label><input id="nrName" type="text" /></div>
+          <div class="field"><label>Customer Email</label><input id="nrEmail" type="email" /></div>
+        </div>
+        <div class="field"><label>Subject</label><input id="nrSubject" type="text" /></div>
+        <div class="field"><label>Message</label><textarea id="nrMessage" rows="6"></textarea></div>
+        <div class="row">
+          <button class="btn btn-primary" id="btnSubmitRequest">Submit Request</button>
+          <button class="btn" id="btnClearRequest">Clear</button>
+        </div>
+        <div id="nrResult" style="margin-top:12px;font-size:13px"></div>
+      </div>
+    </section>
+
+    <!-- Setup Guide -->
+    <section class="page" id="page-setup">
+      <div class="topbar"><h2>Deployment & Setup Guide</h2></div>
+      <div class="card">
+        <p style="margin-top:0">Configure the Worker URL below so this console can communicate with your backend.</p>
+        <div class="field">
+          <label>Worker Base URL</label>
+          <input id="workerUrl" type="url" placeholder="https://your-worker.your-subdomain.workers.dev" />
+        </div>
+        <h3 style="margin-top:24px">Manual Deployment Steps (Cloudflare Dashboard)</h3>
+        <ol style="line-height:1.8;color:var(--muted)">
+          <li>Create a Worker in Cloudflare Dashboard (e.g., <code>codevent-api</code>).</li>
+          <li>Copy the code from <code>worker/index.js</code> (provided separately) into the Worker's Quick Edit and Deploy.</li>
+          <li>Create a D1 Database (e.g., <code>codevent-db</code>).</li>
+          <li>Run the SQL from <code>worker/schema.sql</code> in the D1 Console.</li>
+          <li>In Worker Settings → Bindings, add a D1 Database binding named exactly <code>DB</code>.</li>
+          <li>In Worker Settings → Variables, add: <code>FIREBASE_PROJECT_ID</code>, <code>FIREBASE_API_KEY</code>, and <code>ADMIN_EMAILS</code> (comma-separated).</li>
+          <li>In Worker Settings → Variables (as Secrets), add: <code>ZOHO_CLIENT_ID</code>, <code>ZOHO_CLIENT_SECRET</code>, <code>ZOHO_REFRESH_TOKEN</code>, <code>ZOHO_ACCOUNT_ID</code>.</li>
+          <li>Paste your Worker URL above and save. Log in to test.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<!-- Firebase Compat (Adjust paths if your repo uses modular Firebase) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<!-- IMPORTANT: Ensure these paths match your existing repository structure -->
+<script src="/firebase-config.js"></script>
+<script src="/auth.js"></script>
+
+<script>
+(function(){
+  'use strict';
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  
+  function getWorkerUrl() {
+    const ls = localStorage.getItem('codevent.workerUrl');
+    return (ls || window.CODEVENT_WORKER_URL || '').replace(/\/+$/, '');
+  }
+  
+  function toast(msg, type='info', ms=3000) {
+    const el = document.createElement('div');
+    el.className = 'toast ' + (type === 'success' ? 'success' : type === 'error' ? 'error' : '');
+    el.textContent = msg;
+    $('#toasts').appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 200); }, ms);
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return isNaN(d) ? iso : d.toLocaleString();
+  }
+  function fmtDateShort(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return isNaN(d) ? iso : d.toLocaleDateString([], { month: 'short', day: '2-digit', year: 'numeric' });
+  }
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function statusChip(s) {
+    const map = { new: 'new', in_progress: 'in_progress', resolved: 'resolved' };
+    const label = { new: 'New', in_progress: 'In Progress', resolved: 'Resolved' }[s] || s;
+    return `<span class="chip ${map[s] || 'new'}">${escapeHtml(label)}</span>`;
+  }
+
+  let currentUser = null;
+  let isAdmin = false;
+
+  // Auth
+  $('#btnSignIn').addEventListener('click', async () => {
+    const email = $('#siEmail').value.trim();
+    const pw = $('#siPassword').value;
+    if (!email || !pw) { showAuthError('Enter email and password.'); return; }
+    try { await firebase.auth().signInWithEmailAndPassword(email, pw); }
+    catch (e) { showAuthError(e.message || 'Authentication failed.'); }
+  });
+
+  $('#btnGoogle').addEventListener('click', async () => {
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      await firebase.auth().signInWithPopup(provider);
+    } catch (e) { showAuthError(e.message || 'Google sign-in failed.'); }
+  });
+
+  $('#btnSignOut').addEventListener('click', () => firebase.auth().signOut());
+
+  function showAuthError(msg) {
+    const el = $('#authError');
+    if (!msg) { el.classList.add('hidden'); el.textContent = ''; return; }
+    el.textContent = msg; el.classList.remove('hidden');
+  }
+
+  firebase.auth().onAuthStateChanged(async (user) => {
+    currentUser = user;
+    if (!user) {
+      isAdmin = false;
+      $('#loginView').style.display = '';
+      $('#appView').classList.remove('active');
+      return;
+    }
+    $('#loginView').style.display = 'none';
+    
+    const url = getWorkerUrl();
+    if (!url) {
+      $('#appView').classList.add('active');
+      $('#sideUser').textContent = user.email || 'Signed in';
+      toast('Set Worker URL in Setup Guide to continue.', 'error', 5000);
+      navigateTo('setup');
+      return;
+    }
+
+    try {
+      const idToken = await user.getIdToken();
+      const res = await fetch(url + '/api/admin/verify', { headers: { 'Authorization': 'Bearer ' + idToken } });
+      if (res.status === 401 || res.status === 403) {
+        isAdmin = false;
+        $('#appView').classList.add('active');
+        $('#sideUser').textContent = user.email;
+        toast('This account is not an administrator.', 'error', 5000);
+        return;
+      }
+      if (!res.ok) throw new Error('Verification failed');
+      const data = await res.json();
+      isAdmin = !!data.isAdmin;
+      if (!isAdmin) { toast('Not authorized as admin.', 'error', 5000); return; }
+      
+      $('#appView').classList.add('active');
+      $('#sideUser').textContent = user.displayName || user.email;
+      navigateTo('dashboard');
+    } catch (err) {
+      toast('Could not reach Worker. Check URL.', 'error', 5000);
+    }
+  });
+
+  // Navigation
+  function navigateTo(page) {
+    $$('.page').forEach(p => p.classList.remove('active'));
+    const target = $('#page-' + page);
+    if (target) target.classList.add('active');
+    $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+    if (page === 'dashboard') loadDashboard();
+    if (page === 'requests') loadRequests();
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-page]');
+    if (t) { e.preventDefault(); navigateTo(t.dataset.page); }
+  });
+
+  // API Helper
+  async function api(path, { method = 'GET', body, admin = true } = {}) {
+    const url = getWorkerUrl();
+    if (!url) throw new Error('Worker URL not configured');
+    const headers = { 'Accept': 'application/json' };
+    if (body !== undefined) headers['Content-Type'] = 'application/json';
+    if (admin && currentUser) headers['Authorization'] = 'Bearer ' + await currentUser.getIdToken();
+    
+    const res = await fetch(url + path, { method, headers, body: body !== undefined ? JSON.stringify(body) : undefined });
+    let data = null;
+    if (res.headers.get('content-type')?.includes('application/json')) data = await res.json();
+    if (!res.ok) throw new Error((data && (data.error || data.message)) || `Request failed (${res.status})`);
+    return data;
+  }
+
+  // Dashboard
+  async function loadDashboard() {
+    try {
+      const data = await api('/api/admin/requests?limit=5');
+      const rows = data.requests || [];
+      const c = data.counts || {};
+      $('#statTotal').textContent = c.total ?? '—';
+      $('#statNew').textContent = c.new ?? '—';
+      $('#statInProgress').textContent = c.in_progress ?? '—';
+      $('#statResolved').textContent = c.resolved ?? '—';
+      $('#recentTable').innerHTML = renderTable(rows.slice(0, 5));
+      attachRowHandlers($('#recentTable'));
+    } catch (err) { $('#recentTable').innerHTML = `<div style="padding:20px;text-align:center;color:var(--muted)">${escapeHtml(err.message)}</div>`; }
+  }
+  $('#btnRefreshDash').addEventListener('click', loadDashboard);
+
+  // Requests List
+  let allRequests = [];
+  async function loadRequests() {
+    try {
+      const data = await api('/api/admin/requests');
+      allRequests = data.requests || [];
+      renderRequestsView();
+    } catch (err) { $('#requestsTable').innerHTML = `<div style="padding:20px;text-align:center;color:var(--muted)">${escapeHtml(err.message)}</div>`; }
+  }
+  function renderRequestsView() {
+    const q = ($('#searchInput').value || '').trim().toLowerCase();
+    const status = $('#statusFilter').value;
+    const rows = allRequests.filter(r => {
+      if (status && r.status !== status) return false;
+      if (!q) return true;
+      return (r.request_id||'').toLowerCase().includes(q) || (r.customer_name||'').toLowerCase().includes(q) || (r.customer_email||'').toLowerCase().includes(q);
+    });
+    $('#requestsTable').innerHTML = renderTable(rows);
+    attachRowHandlers($('#requestsTable'));
+  }
+  $('#searchInput').addEventListener('input', renderRequestsView);
+  $('#statusFilter').addEventListener('change', renderRequestsView);
+
+  function renderTable(rows) {
+    if (!rows || !rows.length) return `<div style="padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:12px">No requests found.</div>`;
+    const body = rows.map(r => `
+      <tr data-rid="${escapeHtml(r.request_id)}">
+        <td class="mono" style="color:var(--brand);font-weight:600;font-size:12px">#${escapeHtml(r.request_id)}</td>
+        <td><div>${escapeHtml(r.customer_name || '—')}</div><div style="color:var(--muted);font-size:12px">${escapeHtml(r.customer_email || '')}</div></td>
+        <td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(r.subject || '—')}</td>
+        <td>${statusChip(r.status)}</td>
+        <td style="color:var(--muted);font-size:12px;white-space:nowrap">${fmtDateShort(r.created_at)}</td>
+      </tr>`).join('');
+    return `<table><thead><tr><th>Request</th><th>Customer</th><th>Subject</th><th>Status</th><th>Created</th></tr></thead><tbody>${body}</tbody></table>`;
+  }
+  function attachRowHandlers(root) {
+    if (!root) return;
+    root.querySelectorAll('tr[data-rid]').forEach(tr => {
+      tr.addEventListener('click', () => openRequest(tr.dataset.rid));
+    });
+  }
+
+  // Request Detail
+  async function openRequest(requestId) {
+    navigateTo('detail');
+    $('#detailTitle').textContent = 'Request #' + requestId;
+    $('#detailBody').innerHTML = `<div class="card" style="text-align:center;padding:40px;color:var(--muted)">Loading…</div>`;
+    try {
+      const r = await api('/api/admin/requests/' + encodeURIComponent(requestId));
+      const req = r.request || r;
+      $('#detailBody').innerHTML = `
+        <div class="grid" style="grid-template-columns:2fr 1fr">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div><div class="mono" style="color:var(--brand);font-weight:700;font-size:16px">#${escapeHtml(req.request_id)}</div>
+              <div style="color:var(--muted);font-size:12px">Created ${fmtDate(req.created_at)}</div></div>
+              ${statusChip(req.status)}
+            </div>
+            <div style="display:grid;grid-template-columns:120px 1fr;gap:8px 12px;margin-bottom:16px">
+              <div style="color:var(--muted);font-size:12px;font-weight:600">Customer</div><div>${escapeHtml(req.customer_name || '—')}</div>
+              <div style="color:var(--muted);font-size:12px;font-weight:600">Email</div><div><a href="mailto:${encodeURIComponent(req.customer_email || '')}">${escapeHtml(req.customer_email || '—')}</a></div>
+              <div style="color:var(--muted);font-size:12px;font-weight:600">Subject</div><div>${escapeHtml(req.subject || '—')}</div>
+            </div>
+            <h4 style="margin:0 0 8px;font-size:14px">Message</h4>
+            <div style="background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px;white-space:pre-wrap;font-size:13px;line-height:1.5">${escapeHtml(req.message || '')}</div>
+            
+            <h4 style="margin:16px 0 8px;font-size:14px">Admin Notes</h4>
+            <div class="field">
+              <textarea id="notesArea" rows="4">${escapeHtml(req.admin_notes || '')}</textarea>
+              <button class="btn" id="btnSaveNotes" style="width:fit-content">Save Notes</button>
+            </div>
+          </div>
+          <div class="card">
+            <h4 style="margin:0 0 12px;font-size:14px">Actions</h4>
+            <div class="field">
+              <label>Change Status</label>
+              <select id="statusSelect">
+                <option value="new" ${req.status==='new'?'selected':''}>New</option>
+                <option value="in_progress" ${req.status==='in_progress'?'selected':''}>In Progress</option>
+                <option value="resolved" ${req.status==='resolved'?'selected':''}>Resolved</option>
+              </select>
+            </div>
+            <div class="row" style="flex-direction:column">
+              <button class="btn btn-primary" id="btnReply">Send Reply (Email)</button>
+              <button class="btn" style="background:var(--success);color:#fff;border-color:transparent" id="btnResolve">Mark Resolved</button>
+            </div>
+          </div>
+        </div>`;
+
+      $('#btnSaveNotes').addEventListener('click', async () => {
+        try {
+          await api('/api/admin/requests/' + encodeURIComponent(req.request_id), { method: 'PATCH', body: { admin_notes: $('#notesArea').value } });
+          toast('Notes saved', 'success');
+        } catch (err) { toast(err.message, 'error'); }
+      });
+      $('#statusSelect').addEventListener('change', async (e) => {
+        try {
+          await api('/api/admin/requests/' + encodeURIComponent(req.request_id), { method: 'PATCH', body: { status: e.target.value } });
+          toast('Status updated', 'success');
+        } catch (err) { toast(err.message, 'error'); }
+      });
+      $('#btnReply').addEventListener('click', () => {
+        const msg = prompt('Enter reply message to customer:');
+        if (!msg) return;
+        $('#btnReply').textContent = 'Sending…';
+        $('#btnReply').disabled = true;
+        api('/api/admin/requests/' + encodeURIComponent(req.request_id) + '/reply', { method: 'POST', body: { message: msg, moveToInProgress: req.status === 'new' } })
+          .then(() => { toast('Reply sent via Zoho', 'success'); openRequest(req.request_id); })
+          .catch(err => toast(err.message, 'error'))
+          .finally(() => { $('#btnReply').textContent = 'Send Reply (Email)'; $('#btnReply').disabled = false; });
+      });
+      $('#btnResolve').addEventListener('click', async () => {
+        if (!confirm('Mark as resolved and notify customer?')) return;
+        try {
+          await api('/api/admin/requests/' + encodeURIComponent(req.request_id) + '/resolve', { method: 'POST', body: {} });
+          toast('Marked as resolved', 'success');
+          openRequest(req.request_id);
+        } catch (err) { toast(err.message, 'error'); }
+      });
+    } catch (err) {
+      $('#detailBody').innerHTML = `<div class="card" style="text-align:center;padding:40px;color:var(--danger)">${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  // New Request Form
+  $('#btnSubmitRequest').addEventListener('click', async () => {
+    const name = $('#nrName').value.trim();
+    const email = $('#nrEmail').value.trim();
+    const subject = $('#nrSubject').value.trim();
+    const message = $('#nrMessage').value.trim();
+    const out = $('#nrResult');
+    out.textContent = '';
+    if (!name || !email || !subject || !message) { out.textContent = 'Please complete all fields.'; out.style.color = '#b91c1c'; return; }
+    
+    $('#btnSubmitRequest').disabled = true;
+    $('#btnSubmitRequest').textContent = 'Submitting…';
+    try {
+      const data = await api('/api/requests', { method: 'POST', body: { customerName: name, customerEmail: email, subject, message }, admin: false });
+      out.style.color = '#065f46';
+      out.innerHTML = `Request received. Reference: <b class="mono">#${escapeHtml(data.requestId)}</b>. Acknowledgement email sent.`;
+      $('#nrName').value = ''; $('#nrEmail').value = ''; $('#nrSubject').value = ''; $('#nrMessage').value = '';
+      if (isAdmin) loadRequests();
+    } catch (err) {
+      out.style.color = '#b91c1c';
+      out.textContent = err.message || 'Submission failed.';
+    } finally {
+      $('#btnSubmitRequest').disabled = false;
+      $('#btnSubmitRequest').textContent = 'Submit Request';
+    }
+  });
+  $('#btnClearRequest').addEventListener('click', () => {
+    $('#nrName').value = ''; $('#nrEmail').value = ''; $('#nrSubject').value = ''; $('#nrMessage').value = '';
+    $('#nrResult').textContent = '';
+  });
+
+  // Worker URL Persistence
+  const wurl = $('#workerUrl');
+  wurl.value = localStorage.getItem('codevent.workerUrl') || window.CODEVENT_WORKER_URL || '';
+  wurl.addEventListener('change', () => {
+    localStorage.setItem('codevent.workerUrl', wurl.value.trim());
+    toast('Worker URL saved', 'success');
+  });
+})();
+</script>
+  <script>pwa-register.js</script>
+</body>
+</html>
