@@ -14,16 +14,13 @@
   --font: 'Plus Jakarta Sans', Arial, sans-serif;
   --font-mono: 'DM Mono', monospace;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 body {
   background: var(--dark);
   color: var(--text);
   font-family: var(--font);
   min-height: 100vh;
 }
-
 a { color: inherit; }
 
 /* ── GATE (login required) ─────────────────────────────────── */
@@ -55,7 +52,6 @@ a { color: inherit; }
 /* ── APP SHELL ──────────────────────────────────────────────── */
 #app { display: none; min-height: 100vh; }
 #app.visible { display: block; }
-
 .topbar {
   display: flex;
   align-items: center;
@@ -77,8 +73,32 @@ a { color: inherit; }
   font-size: 0.85rem;
 }
 .topbar button:hover { border-color: var(--primary); }
-
 main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+/* ── TABS ───────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
 /* ── STAT CARDS ─────────────────────────────────────────────── */
 .stats {
@@ -136,7 +156,6 @@ tbody tr { cursor: pointer; }
 tbody tr:hover { background: rgba(255,255,255,0.03); }
 tbody tr:last-child td { border-bottom: none; }
 .req-id { font-family: var(--font-mono); color: var(--accent); }
-
 .badge {
   display: inline-block;
   padding: 0.2rem 0.6rem;
@@ -148,10 +167,11 @@ tbody tr:last-child td { border-bottom: none; }
 .badge.new { background: rgba(255,178,63,0.15); color: var(--warn); }
 .badge.in_progress { background: rgba(91,76,255,0.15); color: var(--primary); }
 .badge.resolved { background: rgba(0,229,160,0.15); color: var(--accent); }
-
+.badge.valid { background: rgba(0,229,160,0.15); color: var(--accent); }
+.badge.revoked { background: rgba(255,91,106,0.15); color: var(--danger); }
 .empty-state { padding: 2.5rem; text-align: center; color: var(--text-muted); }
 
-/* ── MODAL (request detail) ────────────────────────────────── */
+/* ── MODAL ──────────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.6);
@@ -170,6 +190,7 @@ tbody tr:last-child td { border-bottom: none; }
   padding: 1.5rem;
   width: 100%;
   max-width: 560px;
+  position: relative;
 }
 .modal h2 { font-size: 1.1rem; margin-bottom: 0.25rem; }
 .modal .meta { color: var(--text-muted); font-size: 0.82rem; margin-bottom: 1rem; }
@@ -183,7 +204,7 @@ tbody tr:last-child td { border-bottom: none; }
   max-height: 180px;
   overflow-y: auto;
 }
-.modal select, .modal textarea {
+.modal select, .modal textarea, .modal input {
   width: 100%;
   background: var(--dark-3);
   border: 1px solid var(--border);
@@ -213,12 +234,13 @@ tbody tr:last-child td { border-bottom: none; }
 .btn-primary:hover { background: var(--primary-dark); }
 .btn-secondary { background: var(--dark-3); color: var(--text); border: 1px solid var(--border) !important; }
 .btn-success { background: var(--accent); color: #05130d; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #e04a58; }
 .btn-close {
   position: absolute; top: 1rem; right: 1rem;
   background: transparent; border: none; color: var(--text-muted);
   font-size: 1.2rem; cursor: pointer;
 }
-.modal { position: relative; }
 .status-msg { font-size: 0.82rem; margin-top: 0.6rem; }
 .status-msg.ok { color: var(--accent); }
 .status-msg.err { color: var(--danger); }
