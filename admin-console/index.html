@@ -27,66 +27,98 @@
 <div id="app">
   <div class="topbar">
     <div class="brand">CodeVent <span>Admin</span></div>
-    <div style="display:flex; align-items:center; gap:1rem;">
-      <button id="navRequests" class="btn-secondary">Requests</button>
-      <button id="navCertificates" class="btn-secondary">Certificates</button>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <button class="tab-btn active" data-tab="requests"
+        style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.5rem 1rem; border-radius:0.5rem; cursor:pointer;">Requests</button>
+      <button class="tab-btn" data-tab="certificates"
+        style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.5rem 1rem; border-radius:0.5rem; cursor:pointer;">Certificates</button>
       <span class="who" id="who"></span>
       <button id="logoutBtn">Sign out</button>
     </div>
   </div>
 
-  <main id="requestsPanel">
-    <div class="stats">
-      <div class="stat-card">
-        <div class="num" id="statTotal">–</div>
-        <div class="label">Total</div>
+  <main>
+    <!-- ═══════════════════ TAB: REQUESTS ═══════════════════ -->
+    <div id="tab-requests" class="tab-content">
+      <div class="stats">
+        <div class="stat-card">
+          <div class="num" id="statTotal">–</div>
+          <div class="label">Total</div>
+        </div>
+        <div class="stat-card new">
+          <div class="num" id="statNew">–</div>
+          <div class="label">New</div>
+        </div>
+        <div class="stat-card in_progress">
+          <div class="num" id="statInProgress">–</div>
+          <div class="label">In Progress</div>
+        </div>
+        <div class="stat-card resolved">
+          <div class="num" id="statResolved">–</div>
+          <div class="label">Resolved</div>
+        </div>
       </div>
-      <div class="stat-card new">
-        <div class="num" id="statNew">–</div>
-        <div class="label">New</div>
+
+      <div class="toolbar">
+        <input id="searchInput" type="text" placeholder="Search by request ID, name, or email…" />
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option value="new">New</option>
+          <option value="in_progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+        </select>
       </div>
-      <div class="stat-card in_progress">
-        <div class="num" id="statInProgress">–</div>
-        <div class="label">In Progress</div>
-      </div>
-      <div class="stat-card resolved">
-        <div class="num" id="statResolved">–</div>
-        <div class="label">Resolved</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Customer</th>
+              <th>Subject</th>
+              <th>Status</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div class="empty-state" id="emptyState" style="display:none;"></div>
       </div>
     </div>
 
-    <div class="toolbar">
-      <input id="searchInput" type="text" placeholder="Search by request ID, name, or email…" />
-      <select id="statusFilter">
-        <option value="">All statuses</option>
-        <option value="new">New</option>
-        <option value="in_progress">In Progress</option>
-        <option value="resolved">Resolved</option>
-      </select>
-    </div>
+    <!-- ═══════════════════ TAB: CERTIFICATES ═══════════════════ -->
+    <div id="tab-certificates" class="tab-content" style="display:none;">
+      <div class="toolbar">
+        <input id="certSearchInput" type="text" placeholder="Search by certificate ID, name, or email…" />
+        <select id="certStatusFilter">
+          <option value="">All statuses</option>
+          <option value="valid">Valid</option>
+          <option value="revoked">Revoked</option>
+        </select>
+        <button id="issueCertBtn" class="btn-primary">Issue Certificate</button>
+      </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Customer</th>
-            <th>Subject</th>
-            <th>Status</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-      <div class="empty-state" id="emptyState" style="display:none;"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Certificate ID</th>
+              <th>Recipient</th>
+              <th>Course</th>
+              <th>Status</th>
+              <th>Issued</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="certTableBody"></tbody>
+        </table>
+        <div class="empty-state" id="certEmptyState" style="display:none;"></div>
+      </div>
     </div>
   </main>
-
-  <!-- ── CERTIFICATES PANEL (new, hidden until "Certificates" nav clicked) ── -->
-  <section id="certificatesPanel" hidden style="padding:1.5rem 2rem;"></section>
 </div>
 
-<!-- ── REQUEST DETAIL MODAL ──────────────────────────────── -->
+<!-- ── REQUEST DETAIL MODAL (unchanged) ──────────────────── -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <button class="btn-close" id="modalClose">✕</button>
@@ -118,19 +150,67 @@
   </div>
 </div>
 
+<!-- ── ISSUE CERTIFICATE MODAL (new) ──────────────────────── -->
+<div class="modal-overlay" id="issueCertModalOverlay">
+  <div class="modal">
+    <button class="btn-close" id="issueCertModalClose">✕</button>
+    <h2>Issue Certificate</h2>
+
+    <div class="field-label">Customer ID</div>
+    <input id="issueCertCustomerId" type="text" placeholder="e.g. cust_a1b2c3…"
+      style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
+
+    <div class="field-label">Product ID</div>
+    <input id="issueCertProductId" type="text" placeholder="e.g. codevent-web-development-course"
+      style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
+
+    <div class="field-label">Recipient Name</div>
+    <input id="issueCertRecipientName" type="text" placeholder="Full name on the certificate"
+      style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
+
+    <div class="field-label">Recipient Email</div>
+    <input id="issueCertRecipientEmail" type="email" placeholder="student@example.com"
+      style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
+
+    <div class="field-label">Course Completed On (optional)</div>
+    <input id="issueCertCompletedAt" type="date"
+      style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="confirmIssueCertBtn">Issue Certificate</button>
+    </div>
+    <div class="status-msg" id="issueCertStatusMsg"></div>
+  </div>
+</div>
+
+<!-- ── CERTIFICATE DETAIL / MANAGE MODAL (new) ────────────── -->
+<div class="modal-overlay" id="certDetailModalOverlay">
+  <div class="modal">
+    <button class="btn-close" id="certDetailModalClose">✕</button>
+    <h2 id="certDetailId">—</h2>
+    <div class="meta" id="certDetailMeta"></div>
+
+    <div class="field-label">Recipient</div>
+    <div class="message-box" id="certDetailRecipient"></div>
+
+    <div class="field-label">Course</div>
+    <div class="message-box" id="certDetailProduct"></div>
+
+    <div class="field-label">Status</div>
+    <select id="certDetailStatus" disabled>
+      <option value="valid">Valid</option>
+      <option value="revoked">Revoked</option>
+    </select>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" id="certDetailDownloadBtn">Download</button>
+      <button class="btn-secondary" id="certDetailResendBtn">Resend Email</button>
+      <button class="btn-danger" id="certDetailRevokeBtn" style="background:#c0392b; color:#fff; border:none;">Revoke</button>
+    </div>
+    <div class="status-msg" id="certDetailStatusMsg"></div>
+  </div>
+</div>
+
 <script type="module" src="admin.js"></script>
-<script type="module" src="certificates.js"></script>
-<script>
-  // Simple tab toggle between the existing Requests dashboard and the
-  // new Certificates panel. Does not touch admin.js or certificates.js.
-  document.getElementById("navRequests").addEventListener("click", () => {
-    document.getElementById("requestsPanel").hidden = false;
-    document.getElementById("certificatesPanel").hidden = true;
-  });
-  document.getElementById("navCertificates").addEventListener("click", () => {
-    document.getElementById("requestsPanel").hidden = true;
-    document.getElementById("certificatesPanel").hidden = false;
-  });
-</script>
 </body>
 </html>
