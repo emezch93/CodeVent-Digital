@@ -20,14 +20,7 @@
     .loader { border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 2rem auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .hidden { display: none; }
-    .btn { display: inline-block; margin-top: 1.5rem; padding: 0.75rem 1.5rem; background: var(--primary); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 600; border: none; cursor: pointer; font-size: 1rem; }
-    .btn:hover { background: #4a3ae6; }
-    
-    /* Manual Form Styles */
-    .manual-form { margin-top: 1.5rem; text-align: left; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; }
-    .manual-form label { display: block; font-size: 0.85rem; color: #8b8fa8; margin-bottom: 0.5rem; margin-top: 1rem; }
-    .manual-form input { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.1); background: #0d0f1a; color: var(--text); font-size: 1rem; box-sizing: border-box; }
-    .manual-form input:focus { outline: none; border-color: var(--primary); }
+    .info-text { color: #8b8fa8; font-size: 0.95rem; margin-top: 1rem; }
   </style>
 </head>
 <body>
@@ -39,27 +32,13 @@
     
     <div id="result" class="hidden">
       <div id="statusBadge" class="status-badge"></div>
-      <p id="message" style="color: #8b8fa8; font-size: 0.95rem;"></p>
+      <p id="message" class="info-text"></p>
       
       <div id="details" class="details hidden">
         <p><strong>Recipient</strong> <span id="recipientName"></span></p>
         <p><strong>Course</strong> <span id="courseName"></span></p>
         <p><strong>Issued On</strong> <span id="issuedDate"></span></p>
         <p><strong>Certificate ID</strong> <span id="certId" style="font-family: monospace;"></span></p>
-      </div>
-
-      <a id="viewCertBtn" href="#" class="btn hidden">View & Download Certificate</a>
-      
-      <!-- Manual Verification Fallback Form -->
-      <div id="manualForm" class="manual-form hidden">
-        <p style="color: #8b8fa8; font-size: 0.9rem; margin-bottom: 1rem;">Your email client may have stripped the link parameters. You can verify manually by copying the details from your email:</p>
-        <label for="manualId">Certificate ID</label>
-        <input type="text" id="manualId" placeholder="e.g., CV-WEB-2024-ABC123" />
-        
-        <label for="manualHash">Verification Hash</label>
-        <input type="text" id="manualHash" placeholder="Paste the hash from your email" />
-        
-        <button id="manualVerifyBtn" class="btn" style="width: 100%; margin-top: 1rem;">Verify Manually</button>
       </div>
     </div>
   </div>
@@ -68,10 +47,6 @@
     const WORKER_URL = "https://codevent-support.emezch93.workers.dev";
     
     async function verify(id, hash) {
-      document.getElementById("loader").classList.remove("hidden");
-      document.getElementById("result").classList.add("hidden");
-      document.getElementById("manualForm").classList.add("hidden");
-
       try {
         const res = await fetch(`${WORKER_URL}/verify-certificate?id=${encodeURIComponent(id)}&hash=${encodeURIComponent(hash)}`);
         const data = await res.json();
@@ -89,34 +64,21 @@
           document.getElementById("issuedDate").textContent = new Date(data.certificate.issuedAt).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" });
           document.getElementById("certId").textContent = data.certificate.certificateId;
           document.getElementById("details").classList.remove("hidden");
-
-          const viewBtn = document.getElementById("viewCertBtn");
-          viewBtn.href = `${WORKER_URL}/view-certificate?id=${encodeURIComponent(id)}&hash=${encodeURIComponent(hash)}`;
-          viewBtn.classList.remove("hidden");
         } else {
           document.getElementById("statusBadge").textContent = data.status === "revoked" ? "✕ Revoked" : "✕ Invalid";
           document.getElementById("statusBadge").classList.add("invalid");
-          document.getElementById("message").textContent = data.message || "This certificate could not be verified. It may have been revoked or the details are incorrect.";
+          document.getElementById("message").textContent = data.message || "This certificate could not be verified. It may have been revoked or the link is incorrect.";
         }
       } catch (err) {
-        showError("Unable to connect to the verification server. Please try again later.");
+        document.getElementById("loader").classList.add("hidden");
+        document.getElementById("result").classList.remove("hidden");
+        document.getElementById("statusBadge").textContent = "✕ Error";
+        document.getElementById("statusBadge").classList.add("invalid");
+        document.getElementById("message").textContent = "Unable to connect to the verification server. Please try again later.";
       }
     }
 
-    function showError(msg) {
-      document.getElementById("loader").classList.add("hidden");
-      document.getElementById("result").classList.remove("hidden");
-      document.getElementById("statusBadge").textContent = "✕ Error";
-      document.getElementById("statusBadge").classList.add("invalid");
-      document.getElementById("message").textContent = msg;
-      
-      // Show manual form if parameters are missing from the URL
-      if (msg.includes("Missing")) {
-        document.getElementById("manualForm").classList.remove("hidden");
-      }
-    }
-
-    // Initial load: Check URL for parameters
+    // Check URL for parameters
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
     const hash = params.get("hash");
@@ -124,19 +86,14 @@
     if (id && hash) {
       verify(id, hash);
     } else {
-      showError("Invalid verification link. Missing certificate ID or hash. (Some email clients strip link parameters. You can verify manually below.)");
+      // Clean, non-alarmist message if opened without parameters
+      document.getElementById("loader").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("statusBadge").textContent = "⚠ Incomplete Link";
+      document.getElementById("statusBadge").style.background = "rgba(255, 178, 63, 0.15)";
+      document.getElementById("statusBadge").style.color = "#ffb23f";
+      document.getElementById("message").textContent = "This verification link is incomplete. Please click the full, original link provided in your certificate email.";
     }
-
-    // Manual verification button handler
-    document.getElementById("manualVerifyBtn").addEventListener("click", () => {
-      const manualId = document.getElementById("manualId").value.trim();
-      const manualHash = document.getElementById("manualHash").value.trim();
-      if (manualId && manualHash) {
-        verify(manualId, manualHash);
-      } else {
-        alert("Please enter both the Certificate ID and the Verification Hash.");
-      }
-    });
   </script>
 </body>
 </html>
