@@ -44,7 +44,7 @@ const certEmptyState = document.getElementById("certEmptyState");
 const issueCertBtn = document.getElementById("issueCertBtn");
 const issueCertModalOverlay = document.getElementById("issueCertModalOverlay");
 const issueCertModalClose = document.getElementById("issueCertModalClose");
-const issueCertCustomerId = document.getElementById("issueCertCustomerId");
+// REMOVED: issueCertCustomerId (no longer needed)
 const issueCertProductId = document.getElementById("issueCertProductId");
 const issueCertRecipientName = document.getElementById("issueCertRecipientName");
 const issueCertRecipientEmail = document.getElementById("issueCertRecipientEmail");
@@ -387,10 +387,9 @@ async function runCertModalAction(fn) {
   }
 }
 
-// Issue Certificate Modal
+// ── ISSUE CERTIFICATE MODAL (UPDATED) ───────────────────────
 issueCertBtn.addEventListener("click", () => {
   issueCertStatusMsg.textContent = "";
-  issueCertCustomerId.value = "";
   issueCertProductId.value = "";
   issueCertRecipientName.value = "";
   issueCertRecipientEmail.value = "";
@@ -404,22 +403,49 @@ issueCertModalClose.addEventListener("click", () => {
 
 confirmIssueCertBtn.addEventListener("click", async () => {
   issueCertStatusMsg.textContent = "";
-  const customerId = issueCertCustomerId.value.trim();
+  
   const productId = issueCertProductId.value.trim();
   const recipientName = issueCertRecipientName.value.trim();
   const recipientEmail = issueCertRecipientEmail.value.trim();
   const completedAt = issueCertCompletedAt.value;
 
-  if (!customerId || !productId || !recipientName || !recipientEmail) {
-    issueCertStatusMsg.textContent = "All fields except completion date are required.";
+  if (!productId || !recipientName || !recipientEmail) {
+    issueCertStatusMsg.textContent = "Product ID, Name, and Email are required.";
     issueCertStatusMsg.className = "status-msg err";
     return;
   }
 
   try {
-    const body = { customer_id: customerId, product_id: productId, recipient_name: recipientName, recipient_email: recipientEmail };
+    issueCertStatusMsg.textContent = "Looking up or creating customer...";
+    issueCertStatusMsg.className = "status-msg ok";
+    
+    let customerId;
+    try {
+      // 1. Try to lookup existing customer by email
+      const lookupRes = await api(`/api/customers/lookup?email=${encodeURIComponent(recipientEmail)}`);
+      customerId = lookupRes.customer.id;
+    } catch (err) {
+      // 2. If not found (404), create the customer automatically behind the scenes
+      if (err.message.includes("404") || err.message.includes("No customer found")) {
+        const createRes = await api("/api/customers", {
+          method: "POST",
+          body: JSON.stringify({ email: recipientEmail, name: recipientName })
+        });
+        customerId = createRes.customer.id;
+      } else {
+        throw err;
+      }
+    }
+
+    const body = { 
+      customer_id: customerId, 
+      product_id: productId, 
+      recipient_name: recipientName, 
+      recipient_email: recipientEmail 
+    };
     if (completedAt) body.course_completed_at = completedAt;
     
+    issueCertStatusMsg.textContent = "Issuing certificate...";
     await api("/api/certificates", {
       method: "POST",
       body: JSON.stringify(body)
