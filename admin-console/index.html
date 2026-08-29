@@ -1,165 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Admin Console — CodeVent Digital</title>
-  <link rel="stylesheet" href="admin.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admin Console — CodeVent Digital</title>
+<link rel="stylesheet" href="admin.css" />
 </head>
 <body>
-  <!-- ── LOGIN GATE ─────────────────────────────────────────── -->
-  <div id="gate">
-    <h1>CodeVent Digital <span style="color:var(--primary)">Admin</span></h1>
-    <p>Sign in with your administrator account to manage customer requests and certificates.</p>
-    <form id="gateForm" style="display:flex; flex-direction:column; gap:0.75rem; width:100%; max-width:280px;">
-      <input type="email" name="email" placeholder="Email" required style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.65rem 0.9rem; border-radius:0.5rem; font-family:var(--font);" />
-      <input type="password" name="password" placeholder="Password" required style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.65rem 0.9rem; border-radius:0.5rem; font-family:var(--font);" />
-      <button type="submit">Sign In</button>
-      <div id="gateError" class="gate-error"></div>
-    </form>
+
+<!-- ── LOGIN GATE ─────────────────────────────────────────── -->
+<div id="gate">
+  <h1>CodeVent Digital <span style="color:var(--primary)">Admin</span></h1>
+  <p>Sign in with your administrator account to manage customer requests.</p>
+  <form id="gateForm" style="display:flex; flex-direction:column; gap:0.75rem; width:100%; max-width:280px;">
+    <input type="email" name="email" placeholder="Email" required
+      style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.65rem 0.9rem; border-radius:0.5rem; font-family:var(--font);" />
+    <input type="password" name="password" placeholder="Password" required
+      style="background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.65rem 0.9rem; border-radius:0.5rem; font-family:var(--font);" />
+    <button type="submit">Sign In</button>
+    <div id="gateError" class="gate-error"></div>
+  </form>
+</div>
+
+<!-- ── ADMIN APP ──────────────────────────────────────────── -->
+<div id="app">
+  <div class="topbar">
+    <div class="brand">CodeVent <span>Admin</span></div>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <button id="navRequests" class="btn-secondary">Requests</button>
+      <button id="navCertificates" class="btn-secondary">Certificates</button>
+      <span class="who" id="who"></span>
+      <button id="logoutBtn">Sign out</button>
+    </div>
   </div>
 
-  <!-- ── ADMIN APP ──────────────────────────────────────────── -->
-  <div id="app">
-    <div class="topbar">
-      <div class="brand">CodeVent <span>Admin</span></div>
-      <div style="display:flex; align-items:center; gap:1rem;">
-        <span class="who" id="who"></span>
-        <button id="logoutBtn">Sign out</button>
+  <main id="requestsPanel">
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num" id="statTotal">–</div>
+        <div class="label">Total</div>
+      </div>
+      <div class="stat-card new">
+        <div class="num" id="statNew">–</div>
+        <div class="label">New</div>
+      </div>
+      <div class="stat-card in_progress">
+        <div class="num" id="statInProgress">–</div>
+        <div class="label">In Progress</div>
+      </div>
+      <div class="stat-card resolved">
+        <div class="num" id="statResolved">–</div>
+        <div class="label">Resolved</div>
       </div>
     </div>
-    <main>
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="requests">Requests</button>
-        <button class="tab-btn" data-tab="certificates">Certificates</button>
-      </div>
 
-      <!-- REQUESTS TAB -->
-      <div id="tab-requests" class="tab-content active">
-        <div class="stats">
-          <div class="stat-card"><div class="num" id="statTotal">–</div><div class="label">Total</div></div>
-          <div class="stat-card new"><div class="num" id="statNew">–</div><div class="label">New</div></div>
-          <div class="stat-card in_progress"><div class="num" id="statInProgress">–</div><div class="label">In Progress</div></div>
-          <div class="stat-card resolved"><div class="num" id="statResolved">–</div><div class="label">Resolved</div></div>
-        </div>
-        <div class="toolbar">
-          <input id="searchInput" type="text" placeholder="Search by request ID, name, or email…" />
-          <select id="statusFilter">
-            <option value="">All statuses</option>
-            <option value="new">New</option>
-            <option value="in_progress">In Progress</option>
-            <option value="resolved">Resolved</option>
-          </select>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Request ID</th><th>Customer</th><th>Subject</th><th>Status</th><th>Created</th></tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-          </table>
-          <div class="empty-state" id="emptyState" style="display:none;"></div>
-        </div>
-      </div>
-
-      <!-- CERTIFICATES TAB -->
-      <div id="tab-certificates" class="tab-content">
-        <div class="toolbar">
-          <button id="issueCertBtn" class="btn-primary" style="padding: 0.55rem 0.8rem;">Issue New Certificate</button>
-          <input id="certSearchInput" type="text" placeholder="Search by name, email, or cert ID…" />
-          <select id="certStatusFilter">
-            <option value="">All statuses</option>
-            <option value="valid">Valid</option>
-            <option value="revoked">Revoked</option>
-          </select>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Certificate ID</th><th>Recipient</th><th>Product</th><th>Status</th><th>Issued</th><th>Actions</th></tr>
-            </thead>
-            <tbody id="certTableBody"></tbody>
-          </table>
-          <div class="empty-state" id="certEmptyState" style="display:none;"></div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- ── REQUEST DETAIL MODAL ──────────────────────────────── -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <button class="btn-close" id="modalClose">✕</button>
-      <h2 id="modalReqId">—</h2>
-      <div class="meta" id="modalMeta"></div>
-      <div class="field-label">Message</div>
-      <div class="message-box" id="modalMessage"></div>
-      <div class="field-label">Status</div>
-      <select id="modalStatus">
+    <div class="toolbar">
+      <input id="searchInput" type="text" placeholder="Search by request ID, name, or email…" />
+      <select id="statusFilter">
+        <option value="">All statuses</option>
         <option value="new">New</option>
         <option value="in_progress">In Progress</option>
         <option value="resolved">Resolved</option>
       </select>
-      <div class="field-label">Admin Notes (internal only)</div>
-      <textarea id="modalNotes" placeholder="Internal notes…"></textarea>
-      <div class="field-label">Send Reply to Customer</div>
-      <textarea id="modalReply" placeholder="Type a reply — it will be emailed to the customer…"></textarea>
-      <div class="modal-actions">
-        <button class="btn-primary" id="saveBtn">Save Status / Notes</button>
-        <button class="btn-secondary" id="replyBtn">Send Reply</button>
-        <button class="btn-success" id="resolveBtn">Mark Resolved</button>
-      </div>
-      <div class="status-msg" id="modalStatusMsg"></div>
     </div>
-  </div>
 
-  <!-- ── ISSUE CERTIFICATE MODAL ───────────────────────────── -->
-  <div class="modal-overlay" id="issueCertModalOverlay">
-    <div class="modal">
-      <button class="btn-close" id="issueCertModalClose">✕</button>
-      <h2>Issue Certificate</h2>
-      <div class="field-label">Customer ID</div>
-      <input type="text" id="issueCertCustomerId" placeholder="Customer ID" style="width:100%; background:var(--dark-3); border:1px solid var(--border); color:var(--text); border-radius:0.5rem; padding:0.6rem 0.75rem; font-family:var(--font); font-size:0.88rem;" />
-      <div class="field-label">Product ID</div>
-      <input type="text" id="issueCertProductId" placeholder="e.g., codevent-web-development-course" style="width:100%; background:var(--dark-3); border:1px solid var(--border); color:var(--text); border-radius:0.5rem; padding:0.6rem 0.75rem; font-family:var(--font); font-size:0.88rem;" />
-      <div class="field-label">Recipient Name</div>
-      <input type="text" id="issueCertRecipientName" placeholder="Full Name" style="width:100%; background:var(--dark-3); border:1px solid var(--border); color:var(--text); border-radius:0.5rem; padding:0.6rem 0.75rem; font-family:var(--font); font-size:0.88rem;" />
-      <div class="field-label">Recipient Email</div>
-      <input type="email" id="issueCertRecipientEmail" placeholder="Email Address" style="width:100%; background:var(--dark-3); border:1px solid var(--border); color:var(--text); border-radius:0.5rem; padding:0.6rem 0.75rem; font-family:var(--font); font-size:0.88rem;" />
-      <div class="field-label">Course Completed At (Optional)</div>
-      <input type="date" id="issueCertCompletedAt" style="width:100%; background:var(--dark-3); border:1px solid var(--border); color:var(--text); border-radius:0.5rem; padding:0.6rem 0.75rem; font-family:var(--font); font-size:0.88rem;" />
-      <div class="modal-actions">
-        <button class="btn-primary" id="confirmIssueCertBtn">Issue Certificate</button>
-      </div>
-      <div class="status-msg" id="issueCertStatusMsg"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Customer</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none;"></div>
     </div>
-  </div>
+  </main>
 
-  <!-- ── CERTIFICATE DETAIL MODAL ──────────────────────────── -->
-  <div class="modal-overlay" id="certDetailModalOverlay">
-    <div class="modal">
-      <button class="btn-close" id="certDetailModalClose">✕</button>
-      <h2 id="certDetailId">—</h2>
-      <div class="meta" id="certDetailMeta"></div>
-      <div class="field-label">Recipient</div>
-      <div class="message-box" id="certDetailRecipient"></div>
-      <div class="field-label">Product</div>
-      <div class="message-box" id="certDetailProduct"></div>
-      <div class="field-label">Status</div>
-      <select id="certDetailStatus">
-        <option value="valid">Valid</option>
-        <option value="revoked">Revoked</option>
-      </select>
-      <div class="modal-actions">
-        <button class="btn-primary" id="certDetailDownloadBtn">Download</button>
-        <button class="btn-secondary" id="certDetailResendBtn">Resend Email</button>
-        <button class="btn-danger" id="certDetailRevokeBtn">Revoke</button>
-      </div>
-      <div class="status-msg" id="certDetailStatusMsg"></div>
+  <!-- ── CERTIFICATES PANEL (new, hidden until "Certificates" nav clicked) ── -->
+  <section id="certificatesPanel" hidden style="padding:1.5rem 2rem;"></section>
+</div>
+
+<!-- ── REQUEST DETAIL MODAL ──────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="btn-close" id="modalClose">✕</button>
+    <h2 id="modalReqId">—</h2>
+    <div class="meta" id="modalMeta"></div>
+
+    <div class="field-label">Message</div>
+    <div class="message-box" id="modalMessage"></div>
+
+    <div class="field-label">Status</div>
+    <select id="modalStatus">
+      <option value="new">New</option>
+      <option value="in_progress">In Progress</option>
+      <option value="resolved">Resolved</option>
+    </select>
+
+    <div class="field-label">Admin Notes (internal only)</div>
+    <textarea id="modalNotes" placeholder="Internal notes…"></textarea>
+
+    <div class="field-label">Send Reply to Customer</div>
+    <textarea id="modalReply" placeholder="Type a reply — it will be emailed to the customer…"></textarea>
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveBtn">Save Status / Notes</button>
+      <button class="btn-secondary" id="replyBtn">Send Reply</button>
+      <button class="btn-success" id="resolveBtn">Mark Resolved</button>
     </div>
+    <div class="status-msg" id="modalStatusMsg"></div>
   </div>
+</div>
 
-  <script type="module" src="admin.js"></script>
+<script type="module" src="admin.js"></script>
+<script type="module" src="certificates.js"></script>
+<script>
+  // Simple tab toggle between the existing Requests dashboard and the
+  // new Certificates panel. Does not touch admin.js or certificates.js.
+  document.getElementById("navRequests").addEventListener("click", () => {
+    document.getElementById("requestsPanel").hidden = false;
+    document.getElementById("certificatesPanel").hidden = true;
+  });
+  document.getElementById("navCertificates").addEventListener("click", () => {
+    document.getElementById("requestsPanel").hidden = true;
+    document.getElementById("certificatesPanel").hidden = false;
+  });
+</script>
 </body>
 </html>
