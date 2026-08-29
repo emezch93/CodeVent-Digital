@@ -220,7 +220,15 @@ function renderCertTable(certs) {
   certEmptyState.style.display = "none";
   for (const c of certs) {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="req-id">${escapeHtml(c.certificate_id)}</td> <td>${escapeHtml(c.recipient_name)}<br><span style="color:var(--text-muted); font-size:0.78rem;">${escapeHtml(c.recipient_email)}</span></td> <td>${escapeHtml(c.product_id)}</td> <td><span class="badge ${c.status}">${c.status}</span></td> <td>${new Date(c.issued_at).toLocaleDateString()}</td> <td><button class="btn-secondary manage-cert-btn" style="padding:0.3rem 0.6rem; font-size:0.75rem; margin-right: 0.5rem;" data-id="${c.id}">Manage</button><button class="btn-danger delete-cert-btn" style="padding:0.3rem 0.6rem; font-size:0.75rem;" data-id="${c.id}">Delete</button></td>`;
+    // Truncate hash for display, show full hash on hover
+    const shortHash = c.verification_hash ? c.verification_hash.substring(0, 12) + "..." : "—";
+    tr.innerHTML = `<td class="req-id">${escapeHtml(c.certificate_id)}</td> 
+      <td>${escapeHtml(c.recipient_name)}<br><span style="color:var(--text-muted); font-size:0.78rem;">${escapeHtml(c.recipient_email)}</span></td> 
+      <td>${escapeHtml(c.product_id)}</td> 
+      <td><span class="badge ${c.status}">${c.status}</span></td> 
+      <td>${new Date(c.issued_at).toLocaleDateString()}</td> 
+      <td><code style="font-size:0.75rem; color:var(--text-muted); cursor:pointer;" title="${escapeHtml(c.verification_hash || '')}" onclick="navigator.clipboard.writeText('${escapeHtml(c.verification_hash || '')}'); this.style.color='var(--success)'; setTimeout(() => this.style.color='var(--text-muted)', 1000);">${shortHash}</code></td> 
+      <td><button class="btn-secondary manage-cert-btn" style="padding:0.3rem 0.6rem; font-size:0.75rem; margin-right: 0.5rem;" data-id="${c.id}">Manage</button><button class="btn-danger delete-cert-btn" style="padding:0.3rem 0.6rem; font-size:0.75rem;" data-id="${c.id}">Delete</button></td>`;
     certTableBody.appendChild(tr);
   }
   document.querySelectorAll(".manage-cert-btn").forEach(btn => {
