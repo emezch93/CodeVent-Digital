@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Certificate — CodeVent Digital</title>
+  <style>
+    :root { --primary: #5b4cff; --dark: #0d0f1a; --text: #e8e9f3; --success: #00e5a0; --danger: #ff5b6a; }
+    body { margin: 0; font-family: 'Plus Jakarta Sans', Arial, sans-serif; background: var(--dark); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .container { background: #141628; border: 1px solid rgba(255,255,255,0.08); border-radius: 1rem; padding: 2.5rem; max-width: 500px; width: 100%; text-align: center; }
+    .logo { width: 64px; height: 64px; margin-bottom: 1.5rem; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .status-badge { display: inline-block; padding: 0.5rem 1.5rem; border-radius: 999px; font-weight: 700; font-size: 1.1rem; margin: 1.5rem 0; }
+    .status-badge.valid { background: rgba(0, 229, 160, 0.15); color: var(--success); }
+    .status-badge.invalid { background: rgba(255, 91, 106, 0.15); color: var(--danger); }
+    .details { text-align: left; background: #1c1f38; padding: 1.5rem; border-radius: 0.75rem; margin-top: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+    .details strong { color: #8b8fa8; font-weight: 500; display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+    .details p { margin: 0 0 1rem 0; color: var(--text); }
+    .details p:last-child { margin-bottom: 0; }
+    .loader { border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 2rem auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { display: none; }
+ .btn { display: inline-block; margin-top: 1.5rem; padding: 0.75rem 1.5rem; background: var(--primary); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://codeventdigital.site/icons/icon-192x192.png" alt="CodeVent Digital" class="logo" onerror="this.style.display='none'" />
+    <h1>Certificate Verification</h1>
+    
+    <div id="loader" class="loader"></div>
+    
+    <div id="result" class="hidden">
+      <div id="statusBadge" class="status-badge"></div>
+      <p id="message" style="color: #8b8fa8; font-size: 0.95rem;"></p>
+      
+      <div id="details" class="details hidden">
+        <p><strong>Recipient</strong> <span id="recipientName"></span></p>
+        <p><strong>Course</strong> <span id="courseName"></span></p>
+        <p><strong>Issued On</strong> <span id="issuedDate"></span></p>
+        <p><strong>Certificate ID</strong> <span id="certId" style="font-family: monospace;"></span></p>
+      </div>
+
+      <a id="viewCertBtn" href="#" class="btn hidden">View & Download Certificate</a>
+   9</div>
+  </div>
+
+  <script>
+    const WORKER_URL = "https://codevent-support.emezch93.workers.dev";
+    
+    async function verify() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      const hash = params.get("hash");
+
+      if (!id || !hash) {
+        showError("Invalid verification link. Missing certificate ID or hash.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${WORKER_URL}/verify-certificate?id=${encodeURIComponent(id)}&hash=${encodeURIComponent(hash)}`);
+        const data = await res.json();
+
+        document.getElementById("loader").classList.add("hidden");
+        document.getElementById("result").classList.remove("hidden");
+
+        if (data.valid && data.certificate) {
+          document.getElementById("statusBadge").textContent = "✓ Valid Certificate";
+          document.getElementById("statusBadge").classList.add("valid");
+          document.getElementById("message").textContent = "This certificate is authentic and was issued by CodeVent Digital.";
+          
+          document.getElementById("recipientName").textContent = data.certificate.recipientName;
+          document.getElementById("courseName").textContent = data.certificate.course;
+          document.getElementById("issuedDate").textContent = new Date(data.certificate.issuedAt).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" });
+          document.getElementById("certId").textContent = data.certificate.certificateId;
+          document.getElementById("details").classList.remove("hidden");
+
+          const viewBtn = document.getElementById("viewCertBtn");
+          viewBtn.href = `${WORKER_URL}/view-certificate?id=${encodeURIComponent(id)}&hash=${encodeURIComponent(hash)}`;
+          viewBtn.classList.remove("hidden");
+        } else {
+          document.getElementById("statusBadge").textContent = data.status === "revoked" ? "✕ Revoked" : "✕ Invalid";
+          document.getElementById("statusBadge").classList.add("invalid");
+          document.getElementById("message").textContent = data.message || "This certificate could not be verified. It may have been revoked or the link is incorrect.";
+        }
+      } catch (err) {
+        showError("Unable to connect to the verification server. Please try again later.");
+      }
+    }
+
+    function showError(msg) {
+      document.getElementById("loader").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("statusBadge").textContent = "✕ Error";
+      document.getElementById("statusBadge").classList.add("invalid");
+      document.getElementById("message").textContent = msg;
+    }
+
+    verify();
+  </script>
+  <script src="pwa-register.js"></script>
+</body>
+</html>
