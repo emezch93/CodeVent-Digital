@@ -1,7 +1,6 @@
 import { onAuthChange, logIn, logOut, friendlyError, currentUser } from "../auth.js";
 import { WORKER_URL } from "./admin-config.js";
 
-// ── ELEMENT REFERENCES ──────────────────────────────────────
 const gate = document.getElementById("gate");
 const gateForm = document.getElementById("gateForm");
 const gateError = document.getElementById("gateError");
@@ -12,7 +11,6 @@ const logoutBtn = document.getElementById("logoutBtn");
 const tabBtns = document.querySelectorAll(".tab-btn");
 const tabContents = document.querySelectorAll(".tab-content");
 
-// Request elements
 const statTotal = document.getElementById("statTotal");
 const statNew = document.getElementById("statNew");
 const statInProgress = document.getElementById("statInProgress");
@@ -32,10 +30,10 @@ const modalReply = document.getElementById("modalReply");
 const saveBtn = document.getElementById("saveBtn");
 const replyBtn = document.getElementById("replyBtn");
 const resolveBtn = document.getElementById("resolveBtn");
+const deleteReqBtn = document.getElementById("deleteReqBtn");
 const modalStatusMsg = document.getElementById("modalStatusMsg");
 let activeRequestId = null;
 
-// Certificate elements
 const certSearchInput = document.getElementById("certSearchInput");
 const certStatusFilter = document.getElementById("certStatusFilter");
 const certTableBody = document.getElementById("certTableBody");
@@ -60,10 +58,10 @@ const certDetailStatus = document.getElementById("certDetailStatus");
 const certDetailDownloadBtn = document.getElementById("certDetailDownloadBtn");
 const certDetailResendBtn = document.getElementById("certDetailResendBtn");
 const certDetailRevokeBtn = document.getElementById("certDetailRevokeBtn");
+const deleteCertBtn = document.getElementById("deleteCertBtn");
 const certDetailStatusMsg = document.getElementById("certDetailStatusMsg");
 let activeCertId = null;
 
-// ── AUTH GATE ───────────────────────────────────────────────
 onAuthChange((user) => {
   if (user) { showApp(user); refreshAll(); } else { showGate(); }
 });
@@ -79,7 +77,6 @@ gateForm.addEventListener("submit", async (e) => {
 
 logoutBtn.addEventListener("click", async () => { await logOut(); });
 
-// ── TABS ────────────────────────────────────────────────────
 tabBtns.forEach(btn => {
   btn.addEventListener("click", () => {
     tabBtns.forEach(b => b.classList.remove("active"));
@@ -91,7 +88,6 @@ tabBtns.forEach(btn => {
   });
 });
 
-// ── API HELPER ──────────────────────────────────────────────
 async function api(path, options = {}) {
   const user = currentUser();
   if (!user) throw new Error("Not signed in");
@@ -105,7 +101,6 @@ async function api(path, options = {}) {
   return data;
 }
 
-// ── REQUESTS DASHBOARD ──────────────────────────────────────
 async function refreshAll() { await Promise.all([loadStats(), loadRequests()]); }
 
 async function loadStats() {
@@ -134,17 +129,21 @@ function renderTable(requests) {
   emptyState.style.display = "none";
   for (const r of requests) {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="req-id">${escapeHtml(r.request_id)}</td> <td>${escapeHtml(r.customer_name)}<br><span style="color:var(--text-muted); font-size:0.78rem;">${escapeHtml(r.customer_email)}</span></td> <td>${escapeHtml(r.subject)}</td> <td><span class="badge ${r.status}">${r.status.replace("_", " ")}</span></td> <td>${new Date(r.created_at).toLocaleDateString()}</td>`;
-    tr.addEventListener("click", () => openRequest(r.request_id));
+    tr.innerHTML = `<td class="req-id">${escapeHtml(r.request_id)}</td> <td>${escapeHtml(r.customer_name)}<br><span style="color:var(--text-muted); font-size:0.78rem;">${escapeHtml(r.customer_email)}</span></td> <td>${escapeHtml(r.subject)}</td> <td><span class="badge ${r.status}">${r.status.replace("_", " ")}</span></td> <td>${new Date(r.created_at).toLocaleDateString()}</td> <td><button class="btn-danger delete-req-btn" style="padding:0.3rem 0.6rem; font-size:0.75rem;" data-id="${r.request_id}">Delete</button></td>`;
+    tr.addEventListener("click", (e) => {
+      if (!e.target.classList.contains("delete-req-btn")) openRequest(r.request_id);
+    });
     tableBody.appendChild(tr);
   }
+  document.querySelectorAll(".delete-req-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => { e.stopPropagation(); deleteRequest(btn.getAttribute("data-id")); });
+  });
 }
 
 let searchDebounce;
 searchInput.addEventListener("input", () => { clearTimeout(searchDebounce); searchDebounce = setTimeout(loadRequests, 300); });
 statusFilter.addEventListener("change", loadRequests);
 
-// ── REQUEST MODAL ───────────────────────────────────────────
 async function openRequest(requestId) {
   activeRequestId = requestId; modalStatusMsg.textContent = ""; modalReply.value = "";
   try {
@@ -182,13 +181,27 @@ resolveBtn.addEventListener("click", async () => {
   });
 });
 
+deleteReqBtn.addEventListener("click", async () => {
+  if (activeRequestId) await deleteRequest(activeRequestId);
+});
+
 async function runModalAction(fn) {
   modalStatusMsg.textContent = "";
   try { const msg = await fn(); modalStatusMsg.textContent = msg; modalStatusMsg.className = "status-msg ok"; await refreshAll(); }
   catch (err) { modalStatusMsg.textContent = err.message; modalStatusMsg.className = "status-msg err"; }
 }
 
-// ── CERTIFICATES DASHBOARD ──────────────────────────────────
+async function deleteRequest(requestId) {
+  if (!confirm("Are you sure you want to delete this request? This cannot be undone.")) return;
+  try {
+    await api(`/api/requests/${requestId}`, { method: "DELETE" });
+    loadRequests();
+    if (activeRequestId === requestId) closeModal();
+  } catch (err) {
+    alert("Failed to delete request: " + err.message);
+  }
+}
+
 async function loadCertificates() {
   const params = new URLSearchParams();
   if (certStatusFilter.value) params.set("status", certStatusFilter.value);
@@ -207,10 +220,15 @@ function renderCertTable(certs) {
   certEmptyState.style.display = "none";
   for (const c of certs) {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="req-id">${escapeHtml(c.certificate_id)}</td> <td>${escapeHtml(c.recipient_name)}<br><span style="color:var(--text-muted); font-size:0.78rem;">${escapeHtml(c.recipient_email)}</span></td> <td>${escapeHtml(c.product_id)}</td> <td><span class="badge ${c.status}">${c.status}</span></td> <td>${new Date(c.issued_at).toLocaleDateString()}</td> <td><button class="btn-secondary manage-cert-btn" style="padding:0.3rem 0.6rem; font-size:0.75rem;" data-id="${c.id}">Manage</button></td>`;
+    tr.innerHTML = `<td class="req-id">${escapeHtml(c.certificate_id)}</td> <td>${escapeHtml(c.recipient_name)}<br><span style="color:var(--text-muted); font-size:0.78rem;">${escapeHtml(c.recipient_email)}</span></td> <td>${escapeHtml(c.product_id)}</td> <td><span class="badge ${c.status}">${c.status}</span></td> <td>${new Date(c.issued_at).toLocaleDateString()}</td> <td><button class="btn-secondary manage-cert-btn" style="padding:0.3rem 0.6rem; font-size:0.75rem; margin-right: 0.5rem;" data-id="${c.id}">Manage</button><button class="btn-danger delete-cert-btn" style="padding:0.3rem 0.6rem; font-size:0.75rem;" data-id="${c.id}">Delete</button></td>`;
     certTableBody.appendChild(tr);
   }
-  document.querySelectorAll(".manage-cert-btn").forEach(btn => { btn.addEventListener("click", () => openCertDetail(btn.getAttribute("data-id"))); });
+  document.querySelectorAll(".manage-cert-btn").forEach(btn => {
+    btn.addEventListener("click", () => openCertDetail(btn.getAttribute("data-id")));
+  });
+  document.querySelectorAll(".delete-cert-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => { e.stopPropagation(); deleteCertificate(btn.getAttribute("data-id")); });
+  });
 }
 
 let certSearchDebounce;
@@ -251,13 +269,27 @@ certDetailRevokeBtn.addEventListener("click", async () => {
   await runCertModalAction(async () => { await api(`/api/certificates/${activeCertId}/revoke`, { method: "POST" }); certDetailStatus.value = "revoked"; certDetailRevokeBtn.style.display = "none"; return "Certificate revoked."; });
 });
 
+deleteCertBtn.addEventListener("click", async () => {
+  if (activeCertId) await deleteCertificate(activeCertId);
+});
+
 async function runCertModalAction(fn) {
   certDetailStatusMsg.textContent = "";
   try { const msg = await fn(); certDetailStatusMsg.textContent = msg; certDetailStatusMsg.className = "status-msg ok"; loadCertificates(); }
   catch (err) { certDetailStatusMsg.textContent = err.message; certDetailStatusMsg.className = "status-msg err"; }
 }
 
-// ── ISSUE CERTIFICATE MODAL ─────────────────────────────────
+async function deleteCertificate(certId) {
+  if (!confirm("Are you sure you want to delete this certificate? This cannot be undone.")) return;
+  try {
+    await api(`/api/certificates/${certId}`, { method: "DELETE" });
+    loadCertificates();
+    if (activeCertId === certId) closeCertDetailModal();
+  } catch (err) {
+    alert("Failed to delete certificate: " + err.message);
+  }
+}
+
 issueCertBtn.addEventListener("click", () => {
   issueCertStatusMsg.textContent = "";
   issueCertRecipientEmail.value = ""; issueCertRecipientName.value = ""; 
