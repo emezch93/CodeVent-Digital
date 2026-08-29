@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
-  <!-- ── LOGIN GATE ─────────────────────────────────────────── -->
   <div id="gate">
     <h1>CodeVent Digital <span style="color:var(--primary)">Admin</span></h1>
     <p>Sign in with your administrator account to manage customer requests and certificates.</p>
@@ -20,7 +19,6 @@
     </form>
   </div>
 
-  <!-- ── ADMIN APP ──────────────────────────────────────────── -->
   <div id="app">
     <div class="topbar">
       <div class="brand">CodeVent <span>Admin</span></div>
@@ -35,7 +33,6 @@
         <button class="tab-btn" data-tab="certificates">Certificates</button>
       </div>
 
-      <!-- REQUESTS TAB -->
       <div id="tab-requests" class="tab-content active">
         <div class="stats">
           <div class="stat-card"><div class="num" id="statTotal">–</div><div class="label">Total</div></div>
@@ -54,14 +51,13 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Request ID</th><th>Customer</th><th>Subject</th><th>Status</th><th>Created</th></tr></thead>
+            <thead><tr><th>Request ID</th><th>Customer</th><th>Subject</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
             <tbody id="tableBody"></tbody>
           </table>
           <div class="empty-state" id="emptyState" style="display:none;"></div>
         </div>
       </div>
 
-      <!-- CERTIFICATES TAB -->
       <div id="tab-certificates" class="tab-content" style="display:none;">
         <div class="toolbar">
           <button id="issueCertBtn" class="btn-primary" style="padding: 0.55rem 0.8rem;">Issue New Certificate</button>
@@ -83,7 +79,6 @@
     </main>
   </div>
 
-  <!-- ── REQUEST DETAIL MODAL ──────────────────────────────── -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <button class="btn-close" id="modalClose">✕</button>
@@ -101,15 +96,15 @@
         <button class="btn-primary" id="saveBtn">Save Status / Notes</button>
         <button class="btn-secondary" id="replyBtn">Send Reply</button>
         <button class="btn-success" id="resolveBtn">Mark Resolved</button>
+        <button class="btn-danger" id="deleteReqBtn" style="margin-left: auto;">Delete</button>
       </div>
       <div class="status-msg" id="modalStatusMsg"></div>
     </div>
   </div>
 
-  <!-- ── ISSUE CERTIFICATE MODAL ───────────────────────────── -->
   <div class="modal-overlay" id="issueCertModalOverlay">
     <div class="modal">
-      <button class="btn-close" id="issueCertModalClose"></button>
+      <button class="btn-close" id="issueCertModalClose">✕</button>
       <h2>Issue Certificate</h2>
       <div class="field-label">Recipient Email (Auto-creates/looks up customer)</div>
       <input type="email" id="issueCertRecipientEmail" placeholder="student@example.com" style="width:100%; background:var(--dark-3); border:1px solid var(--border); color:var(--text); border-radius:0.5rem; padding:0.6rem 0.75rem; font-family:var(--font); font-size:0.88rem;" />
@@ -126,7 +121,6 @@
     </div>
   </div>
 
-  <!-- ── CERTIFICATE DETAIL MODAL ──────────────────────────── -->
   <div class="modal-overlay" id="certDetailModalOverlay">
     <div class="modal">
       <button class="btn-close" id="certDetailModalClose">✕</button>
@@ -141,7 +135,8 @@
       <div class="modal-actions">
         <button class="btn-primary" id="certDetailDownloadBtn">Download</button>
         <button class="btn-secondary" id="certDetailResendBtn">Resend Email</button>
-        <button class="btn-danger" id="certDetailRevokeBtn" style="background:#c0392b; color:#fff; border:none;">Revoke</button>
+        <button class="btn-danger" id="certDetailRevokeBtn">Revoke</button>
+        <button class="btn-danger" id="deleteCertBtn" style="margin-left: auto; background: #900;">Delete</button>
       </div>
       <div class="status-msg" id="certDetailStatusMsg"></div>
     </div>
