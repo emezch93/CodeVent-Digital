@@ -151,31 +151,28 @@
 </div>
 
 <!-- ── ISSUE CERTIFICATE MODAL (new) ──────────────────────── -->
+<!-- ── ISSUE CERTIFICATE MODAL ───────────────────────────── -->
 <div class="modal-overlay" id="issueCertModalOverlay">
   <div class="modal">
     <button class="btn-close" id="issueCertModalClose">✕</button>
     <h2>Issue Certificate</h2>
-
-    <div class="field-label">Customer ID</div>
-    <input id="issueCertCustomerId" type="text" placeholder="e.g. cust_a1b2c3…"
+    
+    <div class="field-label">Recipient Email (Auto-creates/looks up customer)</div>
+    <input type="email" id="issueCertRecipientEmail" placeholder="student@example.com"
       style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
-
-    <div class="field-label">Product ID</div>
-    <input id="issueCertProductId" type="text" placeholder="e.g. codevent-web-development-course"
-      style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
-
+    
     <div class="field-label">Recipient Name</div>
-    <input id="issueCertRecipientName" type="text" placeholder="Full name on the certificate"
+    <input type="text" id="issueCertRecipientName" placeholder="Full Name"
       style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
-
-    <div class="field-label">Recipient Email</div>
-    <input id="issueCertRecipientEmail" type="email" placeholder="student@example.com"
+    
+    <div class="field-label">Product ID</div>
+    <input type="text" id="issueCertProductId" placeholder="e.g., codevent-web-development-course"
       style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
-
-    <div class="field-label">Course Completed On (optional)</div>
-    <input id="issueCertCompletedAt" type="date"
+    
+    <div class="field-label">Course Completed At (Optional)</div>
+    <input type="date" id="issueCertCompletedAt"
       style="width:100%; background:var(--dark-2); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:0.5rem; margin-bottom:0.75rem;" />
-
+    
     <div class="modal-actions">
       <button class="btn-primary" id="confirmIssueCertBtn">Issue Certificate</button>
     </div>
