@@ -103,6 +103,6 @@ tbody tr:last-child td { border-bottom: none; }
 .manage-cert-btn, 
 .delete-cert-btn, 
 .delete-req-btn {
-  margin-right: 8px;
+  margin-right: 10px;
   margin-bottom: 8px;
 }
