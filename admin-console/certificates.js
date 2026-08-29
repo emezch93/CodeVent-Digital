@@ -36,11 +36,12 @@ function escapeHtml(str) {
 }
 
 function initCertificatesPanel() {
-  const panel = document.getElementById("certificatesPanel");
-  const navBtn = document.getElementById("navCertificates");
-  if (!panel) return; // index.html not yet wired up — no-op safely
+  try {
+    const panel = document.getElementById("certificatesPanel");
+    const navBtn = document.getElementById("navCertificates");
+    if (!panel) return; // index.html not yet wired up — no-op safely
 
-  panel.innerHTML = `
+    panel.innerHTML = `
     <div class="cert-toolbar" style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
       <input id="certSearch" type="text" placeholder="Search name, email, certificate ID…" style="flex:1; min-width:200px;" />
       <select id="certProductFilter">
@@ -160,8 +161,31 @@ function initCertificatesPanel() {
   statusFilter.addEventListener("change", loadCertificates);
 
   document.getElementById("certIssueBtn").addEventListener("click", async () => {
-    const customerId = prompt("Customer ID (from the customers table):");
-    if (!customerId) return;
+    const email = prompt("Customer's email address:");
+    if (!email) return;
+
+    let customerId;
+    try {
+      const lookup = await centralApi(`/api/customers/lookup?email=${encodeURIComponent(email)}`);
+      customerId = lookup.customer.id;
+    } catch (err) {
+      const createNew = confirm(
+        `No customer found for ${email}.\n\nCreate a new record for this student now? (Use this for legacy/pre-existing students not in the payment system.)`
+      );
+      if (!createNew) return;
+      const name = prompt("Student's full name:") || null;
+      try {
+        const created = await centralApi("/api/customers", {
+          method: "POST",
+          body: JSON.stringify({ email, name }),
+        });
+        customerId = created.customer.id;
+      } catch (err2) {
+        statusMsg.textContent = `Error creating customer: ${err2.message}`;
+        return;
+      }
+    }
+
     const productId = prompt("Product ID (e.g. codevent-web-development-course):");
     if (!productId) return;
     const recipientName = prompt("Recipient full name:");
@@ -177,7 +201,24 @@ function initCertificatesPanel() {
       statusMsg.textContent = `Issued certificate ${data.certificate.certificate_id}.`;
       loadCertificates();
     } catch (err) {
-      statusMsg.textContent = `Error: ${err.message}`;
+      if (/no purchase\/entitlement/i.test(err.message)) {
+        const confirmOverride = confirm(
+          "No purchase record found for this customer/product.\n\nOnly confirm if you have manually verified this student paid or completed the course before this system existed."
+        );
+        if (!confirmOverride) { statusMsg.textContent = "Issuance cancelled."; return; }
+        try {
+          const data = await centralApi("/api/certificates", {
+            method: "POST",
+            body: JSON.stringify({ customerId, productId, recipientName, courseCompletedAt, override: true }),
+          });
+          statusMsg.textContent = `Issued certificate ${data.certificate.certificate_id} (manual override).`;
+          loadCertificates();
+        } catch (err2) {
+          statusMsg.textContent = `Error: ${err2.message}`;
+        }
+      } else {
+        statusMsg.textContent = `Error: ${err.message}`;
+      }
     }
   });
 
@@ -188,6 +229,15 @@ function initCertificatesPanel() {
     });
   } else {
     loadCertificates();
+  }
+  } catch (err) {
+    // Never fail silently into a blank panel — show what went wrong.
+    const panel = document.getElementById("certificatesPanel");
+    if (panel) {
+      panel.innerHTML = `<p style="color:#ff5c5c;">Certificates panel failed to load: ${err.message}<br/>
+        Check that certificates.js and central-config.js are both uploaded to admin-console/, and that CENTRAL_WORKER_URL is correct.</p>`;
+    }
+    console.error("Certificates panel init failed:", err);
   }
 }
 
