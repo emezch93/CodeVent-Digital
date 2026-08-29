@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
+  <!-- ── LOGIN GATE ─────────────────────────────────────────── -->
   <div id="gate">
     <h1>CodeVent Digital <span style="color:var(--primary)">Admin</span></h1>
     <p>Sign in with your administrator account to manage customer requests and certificates.</p>
@@ -19,6 +20,7 @@
     </form>
   </div>
 
+  <!-- ── ADMIN APP ──────────────────────────────────────────── -->
   <div id="app">
     <div class="topbar">
       <div class="brand">CodeVent <span>Admin</span></div>
@@ -33,6 +35,7 @@
         <button class="tab-btn" data-tab="certificates">Certificates</button>
       </div>
 
+      <!-- REQUESTS TAB -->
       <div id="tab-requests" class="tab-content active">
         <div class="stats">
           <div class="stat-card"><div class="num" id="statTotal">–</div><div class="label">Total</div></div>
@@ -58,6 +61,7 @@
         </div>
       </div>
 
+      <!-- CERTIFICATES TAB -->
       <div id="tab-certificates" class="tab-content" style="display:none;">
         <div class="toolbar">
           <button id="issueCertBtn" class="btn-primary" style="padding: 0.55rem 0.8rem;">Issue New Certificate</button>
@@ -79,9 +83,10 @@
     </main>
   </div>
 
+  <!-- ── REQUEST DETAIL MODAL ──────────────────────────────── -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <button class="btn-close" id="modalClose"></button>
+      <button class="btn-close" id="modalClose">✕</button>
       <h2 id="modalReqId">—</h2>
       <div class="meta" id="modalMeta"></div>
       <div class="field-label">Message</div>
@@ -102,6 +107,7 @@
     </div>
   </div>
 
+  <!-- ── ISSUE CERTIFICATE MODAL ───────────────────────────── -->
   <div class="modal-overlay" id="issueCertModalOverlay">
     <div class="modal">
       <button class="btn-close" id="issueCertModalClose">✕</button>
@@ -121,6 +127,7 @@
     </div>
   </div>
 
+  <!-- ── CERTIFICATE DETAIL MODAL ──────────────────────────── -->
   <div class="modal-overlay" id="certDetailModalOverlay">
     <div class="modal">
       <button class="btn-close" id="certDetailModalClose">✕</button>
