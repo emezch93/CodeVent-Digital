@@ -99,3 +99,10 @@ tbody tr:last-child td { border-bottom: none; }
 .status-msg.err { color: var(--danger); }
 
 @media (max-width: 640px) { main { padding: 1rem; } th:nth-child(4), td:nth-child(4) { display: none; } }
+/* Add spacing between action buttons */
+.manage-cert-btn, 
+.delete-cert-btn, 
+.delete-req-btn {
+  margin-right: 8px;
+  margin-bottom: 4px;
+}
