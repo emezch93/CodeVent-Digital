@@ -5,80 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Verify Certificate — CodeVent Digital</title>
   <style>
-    :root { 
-      --primary: #5b4cff; 
+    :root {
+      --primary: #5b4cff;
       --primary-dark: #3d2ee0;
-      --dark: #0d0f1a; 
+      --dark: #0d0f1a;
       --dark-2: #141628;
       --dark-3: #1c1f38;
-      --text: #e8e9f3; 
-      --success: #00e5a0; 
+      --text: #e8e9f3;
+      --text-muted: #8b8fa8;
+      --success: #00e5a0;
       --danger: #ff5b6a;
       --border: rgba(255, 255, 255, 0.08);
+      --radius: 0.75rem;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      margin: 0; 
-      font-family: 'Plus Jakarta Sans', Arial, sans-serif; 
-      background: var(--dark); 
-      color: var(--text); 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      min-height: 100vh; 
-      padding: 2rem; 
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
     }
-    .container { 
-      background: var(--dark-2); 
-      border: 1px solid var(--border); 
-      border-radius: 1rem; 
-      padding: 2.5rem; 
-      max-width: 500px; 
-      width: 100%; 
-      text-align: center; 
+    .container {
+      background: var(--dark-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
     }
-    .logo { width: 64px; height: 64px; margin-bottom: 1.5rem; }
-    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .subtitle { color: #8b8fa8; font-size: 0.95rem; margin-bottom: 2rem; }
-    
-    /* Form Styles */
-    .verify-form { text-align: left; }
-    .verify-form label { 
-      display: block; 
-      font-size: 0.85rem; 
-      color: #8b8fa8; 
-      margin-bottom: 0.5rem; 
-      margin-top: 1rem; 
-      font-weight: 500;
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1.5rem;
     }
-    .verify-form input { 
-      width: 100%; 
-      padding: 0.85rem; 
-      border-radius: 0.5rem; 
-      border: 1px solid var(--border); 
-      background: var(--dark-3); 
-      color: var(--text); 
-      font-size: 1rem; 
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    /* Form */
+    .verify-form {
+      text-align: left;
+    }
+    .verify-form label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      margin-top: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+    .verify-form input {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      background: var(--dark-3);
+      color: var(--text);
+      font-size: 1rem;
       font-family: 'DM Mono', monospace;
       transition: border-color 0.2s;
     }
-    .verify-form input:focus { 
-      outline: none; 
-      border-color: var(--primary); 
+    .verify-form input:focus {
+      outline: none;
+      border-color: var(--primary);
     }
     .verify-form input::placeholder {
       font-family: 'Plus Jakarta Sans', Arial, sans-serif;
       color: #555;
     }
-    .btn-verify { 
-      width: 100%; 
-      margin-top: 1.5rem; 
-      padding: 0.85rem; 
-      background: var(--primary); 
-      color: white; 
+    .btn-verify {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0.85rem;
+      background: var(--primary);
+      color: white;
       border: none;
-      border-radius: 0.5rem; 
-      font-weight: 600; 
+      border-radius: 0.5rem;
+      font-weight: 600;
       font-size: 1rem;
       cursor: pointer;
       transition: background 0.2s;
@@ -86,104 +103,115 @@
     .btn-verify:hover { background: var(--primary-dark); }
     .btn-verify:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* Result Styles */
-    .loader { 
-      border: 3px solid rgba(255,255,255,0.1); 
-      border-top-color: var(--primary); 
-      border-radius: 50%; 
-      width: 40px; 
-      height: 40px; 
-      animation: spin 1s linear infinite; 
-      margin: 2rem auto; 
+    /* Loader */
+    .loader {
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    
+
+    /* Result */
     .hidden { display: none !important; }
-    
-    .status-badge { 
-      display: inline-block; 
-      padding: 0.6rem 1.5rem; 
-      border-radius: 999px; 
-      font-weight: 700; 
-      font-size: 1.1rem; 
-      margin: 1rem 0; 
+    .status-badge {
+      display: inline-block;
+      padding: 0.6rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 1rem 0;
     }
     .status-badge.valid { background: rgba(0, 229, 160, 0.15); color: var(--success); }
     .status-badge.invalid { background: rgba(255, 91, 106, 0.15); color: var(--danger); }
-    
-    .details { 
-      text-align: left; 
-      background: var(--dark-3); 
-      padding: 1.5rem; 
-      border-radius: 0.75rem; 
-      margin-top: 1.5rem; 
-      font-size: 0.95rem; 
-      line-height: 1.6; 
+
+    .details {
+      text-align: left;
+      background: var(--dark-3);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
       border: 1px solid var(--border);
     }
-    .details strong { 
-      color: #8b8fa8; 
-      font-weight: 500; 
-      display: block; 
-      font-size: 0.75rem; 
-      text-transform: uppercase; 
-      letter-spacing: 0.05em; 
-      margin-bottom: 0.25rem; 
+    .details strong {
+      color: var(--text-muted);
+      font-weight: 500;
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
     }
     .details p { margin: 0 0 1rem 0; color: var(--text); }
     .details p:last-child { margin-bottom: 0; }
-    
-    .message-text { color: #8b8fa8; font-size: 0.95rem; margin-top: 1rem; }
-    .back-link { 
-      display: inline-block; 
-      margin-top: 1.5rem; 
-      color: var(--primary); 
-      text-decoration: none; 
-      font-size: 0.9rem; 
-      font-weight: 500;
+
+    .message-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 1rem;
     }
-    .back-link:hover { text-decoration: underline; }
+    .btn-reset {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.2rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-reset:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <img src="https://codeventdigital.site/icons/icon-192x192.png" alt="CodeVent Digital" class="logo" onerror="this.style.display='none'" />
     <h1>Certificate Verification</h1>
-    <p class="subtitle">Enter the details from your certificate email to verify its authenticity.</p>
-    
-    <!-- Manual Input Form -->
+    <p class="subtitle">Enter the Certificate ID and Verification Hash from your certificate email to confirm its authenticity.</p>
+
+    <!-- Input Form -->
     <form id="verifyForm" class="verify-form">
       <label for="certIdInput">Certificate ID</label>
-      <input type="text" id="certIdInput" placeholder="e.g., CV-WEB-2024-ABC123" required />
-      
+      <input type="text" id="certIdInput" placeholder="e.g., CV-WEB-2024-ABC123" required autocomplete="off" />
+
       <label for="certHashInput">Verification Hash</label>
-      <input type="text" id="certHashInput" placeholder="Paste the hash from your email" required />
-      
+      <input type="text" id="certHashInput" placeholder="Paste the hash from your email" required autocomplete="off" />
+
       <button type="submit" id="verifyBtn" class="btn-verify">Verify Certificate</button>
     </form>
 
-    <!-- Loading State -->
+    <!-- Loader -->
     <div id="loader" class="loader hidden"></div>
-    
-    <!-- Result State -->
+
+    <!-- Result -->
     <div id="result" class="hidden">
       <div id="statusBadge" class="status-badge"></div>
       <p id="message" class="message-text"></p>
-      
+
       <div id="details" class="details hidden">
         <p><strong>Recipient</strong> <span id="recipientName"></span></p>
         <p><strong>Course</strong> <span id="courseName"></span></p>
         <p><strong>Issued On</strong> <span id="issuedDate"></span></p>
-        <p><strong>Certificate ID</strong> <span id="certId" style="font-family: 'DM Mono', monospace;"></span></p>
+        <p><strong>Certificate ID</strong> <span id="certIdDisplay" style="font-family: 'DM Mono', monospace;"></span></p>
       </div>
 
-      <button id="resetBtn" class="back-link">Verify another certificate</button>
+      <button id="resetBtn" class="btn-reset">Verify Another Certificate</button>
     </div>
   </div>
 
   <script>
     const WORKER_URL = "https://codevent-support.emezch93.workers.dev";
-    
+
     const form = document.getElementById("verifyForm");
     const loader = document.getElementById("loader");
     const result = document.getElementById("result");
@@ -195,16 +223,16 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      
+
       const id = document.getElementById("certIdInput").value.trim();
       const hash = document.getElementById("certHashInput").value.trim();
 
       if (!id || !hash) {
-        showResult("error", "Please enter both the Certificate ID and the Verification Hash.");
+        showResult("invalid", "Please enter both the Certificate ID and the Verification Hash.");
         return;
       }
 
-      // Show loading state
+      // Switch to loading state
       form.classList.add("hidden");
       loader.classList.remove("hidden");
       result.classList.add("hidden");
@@ -220,11 +248,15 @@
           statusBadge.textContent = "✓ Valid Certificate";
           statusBadge.className = "status-badge valid";
           message.textContent = "This certificate is authentic and was issued by CodeVent Digital.";
-          
+
           document.getElementById("recipientName").textContent = data.certificate.recipientName;
           document.getElementById("courseName").textContent = data.certificate.course;
-          document.getElementById("issuedDate").textContent = new Date(data.certificate.issuedAt).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" });
-          document.getElementById("certId").textContent = data.certificate.certificateId;
+          document.getElementById("issuedDate").textContent = new Date(data.certificate.issuedAt).toLocaleDateString("en-GB", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          });
+          document.getElementById("certIdDisplay").textContent = data.certificate.certificateId;
           details.classList.remove("hidden");
         } else {
           statusBadge.textContent = "✕ Invalid Certificate";
@@ -246,9 +278,9 @@
       form.classList.add("hidden");
       result.classList.remove("hidden");
       details.classList.add("hidden");
-      
-      if (type === "error") {
-        statusBadge.textContent = "✕ Error";
+
+      if (type === "invalid") {
+        statusBadge.textContent = "✕ Invalid Input";
         statusBadge.className = "status-badge invalid";
       }
       message.textContent = msg;
