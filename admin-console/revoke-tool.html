@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeVent Digital — Token Revoke Tool</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    margin: 0;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; color: #f8fafc; }
+  .sub { font-size: 13px; color: #94a3b8; margin: 0 0 24px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 16px 0 6px; color: #cbd5e1; }
+  select, input {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #f8fafc;
+    font-size: 14px;
+  }
+  select:focus, input:focus { outline: none; border-color: #6366f1; }
+  button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 13px;
+    border-radius: 8px;
+    border: none;
+    background: #dc2626;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: #b91c1c; }
+  button:disabled { background: #475569; cursor: not-allowed; }
+  .result {
+    margin-top: 18px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+  }
+  .result.success { background: #14532d; color: #bbf7d0; display: block; }
+  .result.error { background: #7f1d1d; color: #fecaca; display: block; }
+  .hint { font-size: 12px; color: #64748b; margin-top: 4px; }
+  .warn {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #fbbf24;
+    background: #422006;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Revoke Access Token</h1>
+  <p class="sub">CodeVent Digital admin tool — kills one token immediately.</p>
+
+  <label for="course">Course</label>
+  <select id="course">
+    <option value="https://codevent-web-development-course.emezch93.workers.dev">Web Development</option>
+    <option value="https://codevent-nodejs-course.emezch93.workers.dev">Node.js</option>
+    <option value="https://codevent-machine-learning-course.emezch93.workers.dev">Machine Learning</option>
+    <option value="https://codevent-ai-automation-course.emezch93.workers.dev">AI Automation</option>
+  </select>
+
+  <label for="jti">Token ID (jti)</label>
+  <input id="jti" type="text" placeholder="e.g. 3f9a1c2e-....-....-....-............">
+  <p class="hint">Find this in the KV entry for the customer's reference, or by decoding their token.</p>
+
+  <label for="secret">Admin Secret</label>
+  <input id="secret" type="password" placeholder="Your ADMIN_REVOKE_SECRET for this course">
+  <p class="hint">Not saved anywhere — cleared when you close this tab.</p>
+
+  <button id="btn" onclick="revoke()">Revoke Token</button>
+
+  <div id="result" class="result"></div>
+
+  <p class="warn">⚠️ This page must be opened from https://emezch93.github.io — opening it as a local file (double-clicking it) will be blocked by the worker's security settings.</p>
+</div>
+
+<script>
+async function revoke() {
+  const btn = document.getElementById('btn');
+  const resultEl = document.getElementById('result');
+  const workerUrl = document.getElementById('course').value;
+  const jti = document.getElementById('jti').value.trim();
+  const secret = document.getElementById('secret').value.trim();
+
+  resultEl.className = 'result';
+  resultEl.textContent = '';
+
+  if (!jti || !secret) {
+    resultEl.className = 'result error';
+    resultEl.textContent = 'Please fill in both the Token ID and the Admin Secret.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Revoking…';
+
+  try {
+    const response = await fetch(workerUrl + '/admin/revoke', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + secret
+      },
+      body: JSON.stringify({ jti })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.revoked) {
+      resultEl.className = 'result success';
+      resultEl.textContent = '✅ Token revoked. The customer will lose access next time the course page loads.';
+    } else {
+      resultEl.className = 'result error';
+      resultEl.textContent = '❌ ' + (data.message || 'Revoke failed. Check the secret and try again.');
+    }
+  } catch (err) {
+    resultEl.className = 'result error';
+    resultEl.textContent = '❌ Network error — check your connection and the course URL.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Revoke Token';
+  }
+}
+</script>
+</body>
+</html>
