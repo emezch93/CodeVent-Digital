@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeVent Digital — Payment Lookup Tool</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    margin: 0;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; color: #f8fafc; }
+  .sub { font-size: 13px; color: #94a3b8; margin: 0 0 24px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 16px 0 6px; color: #cbd5e1; }
+  select, input {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #f8fafc;
+    font-size: 14px;
+  }
+  select:focus, input:focus { outline: none; border-color: #6366f1; }
+  button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 13px;
+    border-radius: 8px;
+    border: none;
+    background: #4f46e5;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: #4338ca; }
+  button:disabled { background: #475569; cursor: not-allowed; }
+  .result {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+  }
+  .result.success { background: #14532d; color: #d1fae5; display: block; }
+  .result.error { background: #7f1d1d; color: #fecaca; display: block; }
+  .row { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .row:last-child { border-bottom: none; }
+  .row .k { color: #94a3b8; flex-shrink: 0; }
+  .row .v { text-align: right; word-break: break-all; font-family: monospace; font-size: 12px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .badge.active { background: #14532d; color: #86efac; }
+  .badge.revoked { background: #7f1d1d; color: #fca5a5; }
+  .copy-btn {
+    margin-top: 10px;
+    width: 100%;
+    background: #334155;
+    padding: 9px;
+    font-size: 13px;
+  }
+  .copy-btn:hover { background: #475569; }
+  .hint { font-size: 12px; color: #64748b; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Payment Lookup</h1>
+  <p class="sub">CodeVent Digital admin tool — find a customer's token by transaction reference.</p>
+
+  <label for="course">Course</label>
+  <select id="course">
+    <option value="https://codevent-web-development-course.emezch93.workers.dev">Web Development</option>
+    <option value="https://codevent-nodejs-course.emezch93.workers.dev">Node.js</option>
+    <option value="https://codevent-machine-learning-course.emezch93.workers.dev">Machine Learning</option>
+    <option value="https://codevent-ai-automation-course.emezch93.workers.dev">AI Automation</option>
+  </select>
+
+  <label for="reference">Transaction Reference</label>
+  <input id="reference" type="text" placeholder="Paystack reference from their receipt">
+
+  <label for="secret">Admin Secret</label>
+  <input id="secret" type="password" placeholder="Your ADMIN_REVOKE_SECRET for this course">
+  <p class="hint">Not saved anywhere — cleared when you close this tab.</p>
+
+  <button id="btn" onclick="lookup()">Look Up Payment</button>
+
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+let lastToken = "";
+
+async function lookup() {
+  const btn = document.getElementById('btn');
+  const resultEl = document.getElementById('result');
+  const workerUrl = document.getElementById('course').value;
+  const reference = document.getElementById('reference').value.trim();
+  const secret = document.getElementById('secret').value.trim();
+
+  resultEl.className = 'result';
+  resultEl.innerHTML = '';
+
+  if (!reference || !secret) {
+    resultEl.className = 'result error';
+    resultEl.textContent = 'Please fill in both the reference and the admin secret.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Looking up…';
+
+  try {
+    const url = workerUrl + '/admin/lookup?reference=' + encodeURIComponent(reference);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + secret }
+    });
+    const data = await response.json();
+
+    if (response.ok && data.found) {
+      lastToken = data.token;
+      const issuedDate = data.issuedAt ? new Date(data.issuedAt * 1000).toLocaleString() : 'Unknown';
+      resultEl.className = 'result success';
+      resultEl.innerHTML = `
+        <div class="row"><span class="k">Status</span><span class="v"><span class="badge ${data.revoked ? 'revoked' : 'active'}">${data.revoked ? 'REVOKED' : 'ACTIVE'}</span></span></div>
+        <div class="row"><span class="k">Email</span><span class="v">${data.email || '—'}</span></div>
+        <div class="row"><span class="k">Product</span><span class="v">${data.product}</span></div>
+        <div class="row"><span class="k">Issued</span><span class="v">${issuedDate}</span></div>
+        <div class="row"><span class="k">jti</span><span class="v">${data.jti}</span></div>
+        <div class="row"><span class="k">Token</span><span class="v">${data.token.slice(0, 24)}...</span></div>
+        <button class="copy-btn" onclick="copyToken()">Copy Full Token</button>
+      `;
+    } else {
+      resultEl.className = 'result error';
+      resultEl.textContent = '❌ ' + (data.message || 'No payment found for that reference.');
+    }
+  } catch (err) {
+    resultEl.className = 'result error';
+    resultEl.textContent = '❌ Network error — check your connection and the course selected.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Look Up Payment';
+  }
+}
+
+function copyToken() {
+  navigator.clipboard.writeText(lastToken).then(() => {
+    alert('Token copied to clipboard.');
+  });
+}
+</script>
+</body>
+</html>
