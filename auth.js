@@ -1,10 +1,3 @@
-// auth.js
-// ─────────────────────────────────────────────────────────────
-// Handles: Signup · Login · Logout · Auth state · UI gating
-// Depends on: firebase-config.js  (must load first)
-// Used by:    index.html (and any other page needing auth)
-// ─────────────────────────────────────────────────────────────
-
 import { auth } from "./firebase-config.js";
 import {
   createUserWithEmailAndPassword,
@@ -20,11 +13,6 @@ import {
 
 const googleProvider = new GoogleAuthProvider();
 
-
-// ══════════════════════════════════════════════════════════════
-// 1. AUTH ACTIONS
-// ══════════════════════════════════════════════════════════════
-
 export async function signUp(name, email, password) {
   const cred = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(cred.user, { displayName: name.trim() });
@@ -36,15 +24,10 @@ export async function logIn(email, password) {
   return cred.user;
 }
 
-// Kicks off Google sign in. Page navigates away to Google here,
-// nothing after this call runs on this page load.
 export async function signInWithGoogle() {
   await signInWithRedirect(auth, googleProvider);
 }
 
-// Call this once on every page load, before rendering auth state.
-// Resolves the user if this load is the return trip from Google,
-// resolves null on a normal page load with no pending redirect.
 export async function checkGoogleRedirectResult() {
   try {
     const result = await getRedirectResult(auth);
@@ -67,24 +50,9 @@ export async function resetPassword(email) {
   await sendPasswordResetEmail(auth, email);
 }
 
-
-// ══════════════════════════════════════════════════════════════
-// 2. AUTH STATE LISTENER
-// Fires immediately with the persisted session, then on
-// every login / logout.
-// ══════════════════════════════════════════════════════════════
-
 export function onAuthChange(callback) {
   return onAuthStateChanged(auth, callback);
 }
-
-
-// ══════════════════════════════════════════════════════════════
-// 3. UI GATING
-// Add  data-auth="protected"  to any element you want locked.
-// Add  data-auth="logged-in"  to show only when authenticated.
-// Add  data-auth="logged-out" to show only when not logged in.
-// ══════════════════════════════════════════════════════════════
 
 export function applyAuthGate(user) {
   document.querySelectorAll('[data-auth="protected"]').forEach(el => {
@@ -97,11 +65,6 @@ export function applyAuthGate(user) {
     el.style.display = user ? 'none' : '';
   });
 }
-
-
-// ══════════════════════════════════════════════════════════════
-// 4. FIREBASE ERROR → HUMAN MESSAGE
-// ══════════════════════════════════════════════════════════════
 
 export function friendlyError(code) {
   const map = {
