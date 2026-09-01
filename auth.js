@@ -15,6 +15,7 @@ import {
   sendPasswordResetEmail,
   GoogleAuthProvider,
   signInWithRedirect,
+  getRedirectResult,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const googleProvider = new GoogleAuthProvider();
@@ -35,9 +36,23 @@ export async function logIn(email, password) {
   return cred.user;
 }
 
+// Kicks off Google sign in. Page navigates away to Google here,
+// nothing after this call runs on this page load.
 export async function signInWithGoogle() {
-  const cred = await signInWithPopup(auth, googleProvider);
-  return cred.user;
+  await signInWithRedirect(auth, googleProvider);
+}
+
+// Call this once on every page load, before rendering auth state.
+// Resolves the user if this load is the return trip from Google,
+// resolves null on a normal page load with no pending redirect.
+export async function checkGoogleRedirectResult() {
+  try {
+    const result = await getRedirectResult(auth);
+    return result ? result.user : null;
+  } catch (err) {
+    console.error("Google redirect result error:", err.code, err.message);
+    return null;
+  }
 }
 
 export async function logOut() {
@@ -100,9 +115,9 @@ export function friendlyError(code) {
     "auth/network-request-failed": "Network error. Check your connection.",
     "auth/missing-email":          "Please enter your email address.",
     "auth/user-disabled":          "This account has been disabled.",
-    "auth/popup-closed-by-user":   "Sign-in popup was closed. Please try again.",
+    "auth/popup-closed-by-user":   "Sign in popup was closed. Please try again.",
     "auth/popup-blocked":          "Popup was blocked by your browser. Please allow popups.",
-    "auth/account-exists-with-different-credential": "An account already exists with this email using a different sign-in method.",
+    "auth/account-exists-with-different-credential": "An account already exists with this email using a different sign in method.",
   };
   return map[code] || "Something went wrong. Please try again.";
 }
