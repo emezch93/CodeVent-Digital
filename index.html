@@ -1786,9 +1786,8 @@
   <!-- ══ JAVASCRIPT ═════════════════════════════════════════ -->
   <script type="module">
     // ── Import Firebase auth helpers ────────────────────────
-    import { signUp, logIn, logOut, onAuthChange, applyAuthGate, friendlyError, resetPassword, signInWithGoogle }
-      from "./auth.js";
-
+    import { signUp, logIn, logOut, onAuthChange, applyAuthGate, friendlyError, resetPassword, signInWithGoogle, checkGoogleRedirectResult }
+  from "./auth.js";
     // ════════════════════════════════════════════════════════
     // EXISTING SITE JS (preserved exactly)
     // ════════════════════════════════════════════════════════
@@ -1946,27 +1945,17 @@
       document.getElementById('backToLogin')?.addEventListener('click', () => switchTab('login'));
 
       // ── GOOGLE AUTH (shared handler for both login + signup buttons) ──
-      async function handleGoogleAuth(msgId) {
-        const btn = document.getElementById(msgId === 'loginMsg' ? 'googleLoginBtn' : 'googleSignupBtn');
-        const origHTML = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Please wait…';
-        try {
-          const user = await signInWithGoogle();
-          showMsg(msgId, `Welcome, ${user.displayName || 'there'}! ✓`, 'success');
-          setTimeout(closeModal, 1500);
-        } catch (err) {
-          if (err.code !== 'auth/popup-closed-by-user') {
-            showMsg(msgId, friendlyError(err.code), 'error');
-          }
-        } finally {
-          btn.disabled = false;
-          btn.innerHTML = origHTML;
-        }
-      }
-      document.getElementById('googleLoginBtn') ?.addEventListener('click', () => handleGoogleAuth('loginMsg'));
-      document.getElementById('googleSignupBtn')?.addEventListener('click', () => handleGoogleAuth('signupMsg'));
-
+     async function handleGoogleAuth(msgId) {
+  const btn = document.getElementById(msgId === 'loginMsg' ? 'googleLoginBtn' : 'googleSignupBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Redirecting…';
+  try {
+    await signInWithGoogle(); // page navigates to Google here
+  } catch (err) {
+    showMsg(msgId, friendlyError(err.code), 'error');
+    btn.disabled = false;
+  }
+}
       // Locked content → open modal on click
       document.addEventListener('click', e => {
         if (e.target.closest('.auth-locked')) openModal('signup');
@@ -2089,6 +2078,11 @@
     // AUTH STATE — runs outside DOMContentLoaded so it fires
     // as early as possible with the persisted session
     // ════════════════════════════════════════════════════════
+    checkGoogleRedirectResult().then(user => {
+  if (user) {
+    console.log('Signed in via Google:', user.displayName || user.email);
+  }
+});
     onAuthChange(user => {
       applyAuthGate(user);
 
