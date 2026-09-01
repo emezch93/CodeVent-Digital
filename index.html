@@ -1784,10 +1784,10 @@
   </div>
 
   <!-- ══ JAVASCRIPT ═════════════════════════════════════════ -->
-  <script type="module">
+<script type="module">
     // ── Import Firebase auth helpers ────────────────────────
     import { signUp, logIn, logOut, onAuthChange, applyAuthGate, friendlyError, resetPassword, signInWithGoogle, checkGoogleRedirectResult }
-  from "./auth.js";
+      from "./auth.js";
     // ════════════════════════════════════════════════════════
     // EXISTING SITE JS (preserved exactly)
     // ════════════════════════════════════════════════════════
@@ -1945,17 +1945,20 @@
       document.getElementById('backToLogin')?.addEventListener('click', () => switchTab('login'));
 
       // ── GOOGLE AUTH (shared handler for both login + signup buttons) ──
-     async function handleGoogleAuth(msgId) {
-  const btn = document.getElementById(msgId === 'loginMsg' ? 'googleLoginBtn' : 'googleSignupBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Redirecting…';
-  try {
-    await signInWithGoogle(); // page navigates to Google here
-  } catch (err) {
-    showMsg(msgId, friendlyError(err.code), 'error');
-    btn.disabled = false;
-  }
-}
+      async function handleGoogleAuth(msgId) {
+        const btn = document.getElementById(msgId === 'loginMsg' ? 'googleLoginBtn' : 'googleSignupBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Redirecting…';
+        try {
+          await signInWithGoogle(); // page navigates to Google here
+        } catch (err) {
+          showMsg(msgId, friendlyError(err.code), 'error');
+          btn.disabled = false;
+        }
+      }
+      document.getElementById('googleLoginBtn') ?.addEventListener('click', () => handleGoogleAuth('loginMsg'));
+      document.getElementById('googleSignupBtn')?.addEventListener('click', () => handleGoogleAuth('signupMsg'));
+
       // Locked content → open modal on click
       document.addEventListener('click', e => {
         if (e.target.closest('.auth-locked')) openModal('signup');
@@ -2079,10 +2082,10 @@
     // as early as possible with the persisted session
     // ════════════════════════════════════════════════════════
     checkGoogleRedirectResult().then(user => {
-  if (user) {
-    console.log('Signed in via Google:', user.displayName || user.email);
-  }
-});
+      if (user) {
+        console.log('Signed in via Google:', user.displayName || user.email);
+      }
+    });
     onAuthChange(user => {
       applyAuthGate(user);
 
@@ -2109,8 +2112,6 @@
         if (mobileGreeting) mobileGreeting.style.display = 'none';
       }
     });
-
-    // Service Worker registration is handled by pwa-register.js below
   </script>
   <script src="pwa-register.js"></script>
   <script src="enroll-config.js"></script>
