@@ -3,7 +3,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-aut
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPpvSSDrnhoepDgf_ZgI5lSCgTEawljAA",
-  authDomain: "codevent-digital.firebaseapp.com",
+  authDomain: "codeventdigital.site",
   projectId: "codevent-digital",
   storageBucket: "codevent-digital.firebasestorage.app",
   messagingSenderId: "840016876762",
