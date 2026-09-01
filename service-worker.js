@@ -9,7 +9,7 @@
  * Auto-update: skipWaiting + clientsClaim ensures new SW activates immediately.
  */
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v4';
 const SHELL_CACHE   = `codevent-shell-${CACHE_VERSION}`;
 const PAGES_CACHE   = `codevent-pages-${CACHE_VERSION}`;
 const ALL_CACHES    = [SHELL_CACHE, PAGES_CACHE];
