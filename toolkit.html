@@ -1032,6 +1032,135 @@ docs: update README with setup steps</pre>
   <div class="warn-card"><span class="tip-icon">⚠️</span><div>Never commit: API keys, passwords, .env files, node_modules, or build folders. Add them to <code>.gitignore</code> before your first commit.</div></div>
   </section>
 
+  <section class="section" id="sec-python">
+    <div class="sec-header">
+      <h2 class="sec-title">Python Basics</h2>
+      <p class="sec-desc">Core Python syntax for scripting, automation, and data work.</p>
+    </div>
+
+  <h3>Variables & Data Structures</h3>
+  <pre><span style="color:#4a5285"># Core types</span>
+name = <span style="color:#a8e6c3">"Ada"</span>
+age = <span class="num">24</span>
+price = <span class="num">19.99</span>
+is_active = <span style="color:#b39dff">True</span>
+
+<span style="color:#4a5285"># Collections</span>
+skills = [<span style="color:#a8e6c3">"python"</span>, <span style="color:#a8e6c3">"pandas"</span>, <span style="color:#a8e6c3">"sql"</span>]      <span style="color:#4a5285"># list — ordered, mutable</span>
+point = (<span class="num">4</span>, <span class="num">9</span>)                        <span style="color:#4a5285"># tuple — ordered, immutable</span>
+unique_tags = {<span style="color:#a8e6c3">"ai"</span>, <span style="color:#a8e6c3">"ml"</span>, <span style="color:#a8e6c3">"ai"</span>}          <span style="color:#4a5285"># set — no duplicates</span>
+student = {<span style="color:#a8e6c3">"name"</span>: <span style="color:#a8e6c3">"Ada"</span>, <span style="color:#a8e6c3">"age"</span>: <span class="num">24</span>}    <span style="color:#4a5285"># dict — key/value</span></pre>
+  <h3>Functions & Control Flow</h3>
+  <pre><span style="color:#b39dff">def</span> greet(name, greeting=<span style="color:#a8e6c3">"Hello"</span>):
+    <span style="color:#b39dff">return</span> <span style="color:#a8e6c3">f"{greeting}, {name}!"</span>
+
+<span style="color:#b39dff">for</span> skill <span style="color:#b39dff">in</span> skills:
+    <span style="color:#b39dff">if</span> skill == <span style="color:#a8e6c3">"python"</span>:
+        <span style="color:#b39dff">print</span>(<span style="color:#a8e6c3">"Found it"</span>)
+    <span style="color:#b39dff">else</span>:
+        <span style="color:#b39dff">continue</span>
+
+<span style="color:#4a5285"># List comprehension — very common in ML/data code</span>
+squares = [n**<span class="num">2</span> <span style="color:#b39dff">for</span> n <span style="color:#b39dff">in</span> <span style="color:#b39dff">range</span>(<span class="num">10</span>) <span style="color:#b39dff">if</span> n % <span class="num">2</span> == <span class="num">0</span>]</pre>
+  <h3>Working with Files & Packages</h3>
+  <pre><span style="color:#4a5285"># Virtual environment + install packages</span>
+python -m venv venv
+source venv/bin/activate        <span style="color:#4a5285"># Windows: venv\Scripts\activate</span>
+pip install pandas numpy scikit-learn
+
+<span style="color:#4a5285"># Reading a file</span>
+<span style="color:#b39dff">with</span> <span style="color:#b39dff">open</span>(<span style="color:#a8e6c3">"data.csv"</span>) <span style="color:#b39dff">as</span> f:
+    lines = f.readlines()</pre>
+  <div class="warn-card"><span class="tip-icon">💡</span><div>Coming from JavaScript? Python uses indentation instead of curly braces, <code>None</code> instead of <code>null</code>, and <code>snake_case</code> instead of <code>camelCase</code> by convention.</div></div>
+  </section>
+
+  <section class="section" id="sec-ml">
+    <div class="sec-header">
+      <h2 class="sec-title">Machine Learning</h2>
+      <p class="sec-desc">Reference for pandas, numpy, and scikit-learn — the core ML data-science stack.</p>
+    </div>
+
+  <h3>Pandas — Loading & Exploring Data</h3>
+  <pre><span style="color:#b39dff">import</span> pandas <span style="color:#b39dff">as</span> pd
+
+df = pd.read_csv(<span style="color:#a8e6c3">"data.csv"</span>)
+df.head()                    <span style="color:#4a5285"># first 5 rows</span>
+df.info()                    <span style="color:#4a5285"># columns, types, nulls</span>
+df.describe()                <span style="color:#4a5285"># summary statistics</span>
+df[<span style="color:#a8e6c3">"price"</span>].mean()          <span style="color:#4a5285"># column stats</span>
+df[df[<span style="color:#a8e6c3">"price"</span>] > <span class="num">100</span>]        <span style="color:#4a5285"># filter rows</span>
+df.dropna()                  <span style="color:#4a5285"># drop missing values</span>
+df.groupby(<span style="color:#a8e6c3">"category"</span>).sum()   <span style="color:#4a5285"># aggregate</span></pre>
+  <h3>NumPy — Arrays & Math</h3>
+  <pre><span style="color:#b39dff">import</span> numpy <span style="color:#b39dff">as</span> np
+
+arr = np.array([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>])
+arr.mean(), arr.std(), arr.sum()
+matrix = np.zeros((<span class="num">3</span>, <span class="num">3</span>))
+reshaped = arr.reshape(<span class="num">2</span>, <span class="num">2</span>)</pre>
+  <h3>Scikit-learn — Train a Model</h3>
+  <pre><span style="color:#b39dff">from</span> sklearn.model_selection <span style="color:#b39dff">import</span> train_test_split
+<span style="color:#b39dff">from</span> sklearn.linear_model <span style="color:#b39dff">import</span> LogisticRegression
+<span style="color:#b39dff">from</span> sklearn.metrics <span style="color:#b39dff">import</span> accuracy_score
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="num">0.2</span>, random_state=<span class="num">42</span>
+)
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+<span style="color:#b39dff">print</span>(accuracy_score(y_test, predictions))</pre>
+  <table class="ref-table">
+    <tr><th>Concept</th><th>What it means</th></tr>
+    <tr><td>Features (X)</td><td>Input columns the model learns from</td></tr>
+    <tr><td>Label (y)</td><td>The value you're trying to predict</td></tr>
+    <tr><td>Train/test split</td><td>Hold out data to check real-world accuracy</td></tr>
+    <tr><td>Overfitting</td><td>Model memorizes training data, fails on new data</td></tr>
+    <tr><td>Feature scaling</td><td>Normalizing numeric ranges before training</td></tr>
+  </table>
+  <div class="warn-card"><span class="tip-icon">⚠️</span><div>Always evaluate on data the model has never seen (<code>X_test</code>/<code>y_test</code>). High training accuracy with low test accuracy usually means overfitting.</div></div>
+  </section>
+
+  <section class="section" id="sec-aiautomation">
+    <div class="sec-header">
+      <h2 class="sec-title">AI Automation</h2>
+      <p class="sec-desc">Patterns for calling LLM APIs and wiring up automated workflows.</p>
+    </div>
+
+  <h3>Calling an LLM API</h3>
+  <pre><span style="color:#b39dff">const</span> res = <span style="color:#b39dff">await</span> fetch(<span style="color:#a8e6c3">"https://api.openai.com/v1/chat/completions"</span>, {
+  method: <span style="color:#a8e6c3">"POST"</span>,
+  headers: {
+    <span style="color:#a8e6c3">"Content-Type"</span>: <span style="color:#a8e6c3">"application/json"</span>,
+    <span style="color:#a8e6c3">"Authorization"</span>: <span style="color:#a8e6c3">`Bearer ${process.env.OPENAI_API_KEY}`</span>,
+  },
+  body: JSON.stringify({
+    model: <span style="color:#a8e6c3">"gpt-4o-mini"</span>,
+    messages: [{ role: <span style="color:#a8e6c3">"user"</span>, content: prompt }],
+  }),
+});
+<span style="color:#b39dff">const</span> data = <span style="color:#b39dff">await</span> res.json();</pre>
+  <h3>Webhook-Triggered Automation</h3>
+  <pre><span style="color:#4a5285">// Minimal webhook receiver — e.g. on a Cloudflare Worker or Express route</span>
+app.post(<span style="color:#a8e6c3">"/webhook"</span>, <span style="color:#b39dff">async</span> (req, res) => {
+  <span style="color:#b39dff">const</span> event = req.body;
+  <span style="color:#4a5285">// 1. Validate the payload / signature</span>
+  <span style="color:#4a5285">// 2. Decide what action to take</span>
+  <span style="color:#4a5285">// 3. Call the next step (send email, update DB, call an API)</span>
+  res.sendStatus(<span class="num">200</span>);
+});</pre>
+  <h3>Common Automation Building Blocks</h3>
+  <table class="ref-table">
+    <tr><th>Piece</th><th>Role</th></tr>
+    <tr><td>Trigger</td><td>Webhook, cron schedule, or form submission that starts the flow</td></tr>
+    <tr><td>LLM step</td><td>Classify, summarize, extract, or generate text/data</td></tr>
+    <tr><td>Action step</td><td>Send a message, write to a database, call another API</td></tr>
+    <tr><td>Tools like n8n / Zapier</td><td>No-code orchestration for connecting the above without a server</td></tr>
+  </table>
+  <div class="warn-card"><span class="tip-icon">⚠️</span><div>Never call a paid LLM API directly from client-side JS — your key would be exposed. Route it through a server or Worker, same pattern as this Toolkit's own AI Chat.</div></div>
+  </section>
+
   <section class="section" id="sec-launch">
     <div class="sec-header">
       <h2 class="sec-title">Launch Center</h2>
@@ -1168,6 +1297,16 @@ How will you know this project succeeded?</div>
     <div class="link-card" onclick="window.open('https://www.typescriptlang.org/docs')"><div class="link-card-title">TypeScript Docs</div><div class="link-card-url">typescriptlang.org</div></div>
     <div class="link-card" onclick="window.open('https://mongoosejs.com/docs')"><div class="link-card-title">Mongoose Docs</div><div class="link-card-url">mongoosejs.com</div></div>
   </div>
+  <h3>AI & Data Science</h3>
+  <div class="link-grid">
+    <div class="link-card" onclick="window.open('https://pandas.pydata.org/docs')"><div class="link-card-title">Pandas Docs</div><div class="link-card-url">pandas.pydata.org</div><div class="link-card-desc">Data manipulation and analysis</div></div>
+    <div class="link-card" onclick="window.open('https://scikit-learn.org')"><div class="link-card-title">scikit-learn</div><div class="link-card-url">scikit-learn.org</div><div class="link-card-desc">Classic ML models and pipelines</div></div>
+    <div class="link-card" onclick="window.open('https://www.kaggle.com')"><div class="link-card-title">Kaggle</div><div class="link-card-url">kaggle.com</div><div class="link-card-desc">Free datasets, notebooks, and ML competitions</div></div>
+    <div class="link-card" onclick="window.open('https://huggingface.co')"><div class="link-card-title">Hugging Face</div><div class="link-card-url">huggingface.co</div><div class="link-card-desc">Pretrained models and datasets</div></div>
+    <div class="link-card" onclick="window.open('https://ai.google.dev/docs')"><div class="link-card-title">Gemini API Docs</div><div class="link-card-url">ai.google.dev</div><div class="link-card-desc">Google's LLM API — used by this Toolkit's AI Chat</div></div>
+    <div class="link-card" onclick="window.open('https://platform.openai.com/docs')"><div class="link-card-title">OpenAI API Docs</div><div class="link-card-url">platform.openai.com</div><div class="link-card-desc">GPT models, embeddings, function calling</div></div>
+    <div class="link-card" onclick="window.open('https://n8n.io')"><div class="link-card-title">n8n</div><div class="link-card-url">n8n.io</div><div class="link-card-desc">Open-source workflow automation</div></div>
+  </div>
   </section>
 
   <section class="section" id="sec-designresources">
@@ -1215,6 +1354,10 @@ How will you know this project succeeded?</div>
   <div class="idea-card"><div class="idea-header"><div class="idea-name">📰 Blog Platform</div><span class="tag-pill tag-purple">Advanced</span></div><div class="idea-stack">Next.js or React + Node + MongoDB</div><ul class="idea-features"><li>Auth + role permissions</li><li>Create/edit posts (Markdown editor)</li><li>Comments + tags</li><li>Admin dashboard</li></ul></div>
   <div class="idea-card"><div class="idea-header"><div class="idea-name">🛒 E-commerce Store</div><span class="tag-pill tag-purple">Advanced</span></div><div class="idea-stack">React + Node + MongoDB + Paystack</div><ul class="idea-features"><li>Product catalog + search</li><li>Cart + checkout</li><li>Payment integration</li><li>Order tracking + admin</li></ul></div>
   <div class="idea-card"><div class="idea-header"><div class="idea-name">🤖 AI Chat Interface</div><span class="tag-pill tag-yellow">Intermediate</span></div><div class="idea-stack">HTML + CSS + JS + Cloudflare Worker + Gemini API</div><ul class="idea-features"><li>Chat UI with history</li><li>Streaming responses</li><li>localStorage memory</li><li>System prompt config</li></ul></div>
+  <h3>AI & Machine Learning Projects</h3>
+  <div class="idea-card"><div class="idea-header"><div class="idea-name">📧 Spam Classifier</div><span class="tag-pill tag-yellow">Intermediate</span></div><div class="idea-stack">Python + pandas + scikit-learn</div><ul class="idea-features"><li>Load labeled email dataset</li><li>Clean and vectorize text</li><li>Train a classifier</li><li>Report accuracy + confusion matrix</li></ul></div>
+  <div class="idea-card"><div class="idea-header"><div class="idea-name">💬 Sentiment Analysis Dashboard</div><span class="tag-pill tag-purple">Advanced</span></div><div class="idea-stack">Python + scikit-learn + Flask/FastAPI + Chart.js</div><ul class="idea-features"><li>Train or use a pretrained sentiment model</li><li>Serve predictions via a small API</li><li>Visualize trends over time</li><li>Upload CSV for batch analysis</li></ul></div>
+  <div class="idea-card"><div class="idea-header"><div class="idea-name">⚙️ AI Content Automation Pipeline</div><span class="tag-pill tag-purple">Advanced</span></div><div class="idea-stack">Node.js + LLM API + Webhook + Email/WhatsApp API</div><ul class="idea-features"><li>Trigger on new form submission or schedule</li><li>Generate content with an LLM call</li><li>Auto-send or auto-publish the result</li><li>Log every run for review</li></ul></div>
   </section>
 
   <section class="section" id="sec-aiprompts">
@@ -1271,7 +1414,7 @@ Give me a step-by-step plan starting with the simplest MVP version."</div></div>
 
 <script>
   // ─── DATA & NAVIGATION ───────────────────────────────────
-  const navData = [{"label": "Dashboard", "id": "welcome", "icon": "fa-th-large", "group": "Overview"}, {"label": "JS Playground", "id": "javascript", "icon": "fa-bolt", "group": "Practical Tools"}, {"label": "DOM Reference", "id": "dom", "icon": "fa-tree", "group": "Practical Tools"}, {"label": "HTML Reference", "id": "html", "icon": "fa-code", "group": "Cheat Sheets"}, {"label": "CSS Reference", "id": "css", "icon": "fa-paint-brush", "group": "Cheat Sheets"}, {"label": "Flexbox", "id": "flexbox", "icon": "fa-layer-group", "group": "Cheat Sheets"}, {"label": "CSS Grid", "id": "grid", "icon": "fa-th", "group": "Cheat Sheets"}, {"label": "ES6+ Modern JS", "id": "es6", "icon": "fa-sparkles", "group": "Cheat Sheets"}, {"label": "TypeScript", "id": "typescript", "icon": "fa-shield-alt", "group": "Cheat Sheets"}, {"label": "Node.js", "id": "nodejs", "icon": "fa-server", "group": "Cheat Sheets"}, {"label": "Express.js", "id": "express", "icon": "fa-train", "group": "Cheat Sheets"}, {"label": "MongoDB", "id": "mongodb", "icon": "fa-leaf", "group": "Cheat Sheets"}, {"label": "Git & GitHub", "id": "git", "icon": "fa-code-branch", "group": "Cheat Sheets"}, {"label": "Launch Center", "id": "launch", "icon": "fa-rocket", "group": "Workflow"}, {"label": "Project Planning", "id": "planning", "icon": "fa-map", "group": "Workflow"}, {"label": "Daily Planner", "id": "daily", "icon": "fa-calendar-day", "group": "Workflow"}, {"label": "Resources", "id": "resources", "icon": "fa-link", "group": "Resources"}, {"label": "Design Tools", "id": "designresources", "icon": "fa-paint-brush", "group": "Resources"}, {"label": "Project Ideas", "id": "projectideas", "icon": "fa-lightbulb", "group": "Resources"}, {"label": "AI Prompts", "id": "aiprompts", "icon": "fa-robot", "group": "Resources"}];
+  const navData = [{"label": "Dashboard", "id": "welcome", "icon": "fa-th-large", "group": "Overview"}, {"label": "JS Playground", "id": "javascript", "icon": "fa-bolt", "group": "Practical Tools"}, {"label": "DOM Reference", "id": "dom", "icon": "fa-tree", "group": "Practical Tools"}, {"label": "HTML Reference", "id": "html", "icon": "fa-code", "group": "Cheat Sheets"}, {"label": "CSS Reference", "id": "css", "icon": "fa-paint-brush", "group": "Cheat Sheets"}, {"label": "Flexbox", "id": "flexbox", "icon": "fa-layer-group", "group": "Cheat Sheets"}, {"label": "CSS Grid", "id": "grid", "icon": "fa-th", "group": "Cheat Sheets"}, {"label": "ES6+ Modern JS", "id": "es6", "icon": "fa-sparkles", "group": "Cheat Sheets"}, {"label": "TypeScript", "id": "typescript", "icon": "fa-shield-alt", "group": "Cheat Sheets"}, {"label": "Node.js", "id": "nodejs", "icon": "fa-server", "group": "Cheat Sheets"}, {"label": "Express.js", "id": "express", "icon": "fa-train", "group": "Cheat Sheets"}, {"label": "MongoDB", "id": "mongodb", "icon": "fa-leaf", "group": "Cheat Sheets"}, {"label": "Git & GitHub", "id": "git", "icon": "fa-code-branch", "group": "Cheat Sheets"}, {"label": "Python Basics", "id": "python", "icon": "fa-terminal", "group": "AI & Data"}, {"label": "Machine Learning", "id": "ml", "icon": "fa-brain", "group": "AI & Data"}, {"label": "AI Automation", "id": "aiautomation", "icon": "fa-network-wired", "group": "AI & Data"}, {"label": "Launch Center", "id": "launch", "icon": "fa-rocket", "group": "Workflow"}, {"label": "Project Planning", "id": "planning", "icon": "fa-map", "group": "Workflow"}, {"label": "Daily Planner", "id": "daily", "icon": "fa-calendar-day", "group": "Workflow"}, {"label": "Resources", "id": "resources", "icon": "fa-link", "group": "Resources"}, {"label": "Design Tools", "id": "designresources", "icon": "fa-paint-brush", "group": "Resources"}, {"label": "Project Ideas", "id": "projectideas", "icon": "fa-lightbulb", "group": "Resources"}, {"label": "AI Prompts", "id": "aiprompts", "icon": "fa-robot", "group": "Resources"}];
 
   function initNav() {
     const navContainer = document.getElementById('sidebar-nav');
