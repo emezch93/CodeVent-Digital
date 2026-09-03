@@ -46,7 +46,7 @@ export function currentUser() {
 }
 
 export async function resetPassword(email) {
-  const res = await fetch("https://password-reset-mailer.emezch93.workers.dev/", {
+  const res = await fetch("https://password-reset-mailer.emezch93.workers.dev", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
