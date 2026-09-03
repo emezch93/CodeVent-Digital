@@ -1,8 +1,4 @@
-/**
- * CodeVent Digital — sw.js
- */
-
-const CACHE_VERSION = 'cv-v4';
+const CACHE_VERSION = 'cv-v5';
 const SHELL_CACHE   = `codevent-shell-${CACHE_VERSION}`;
 const PAGES_CACHE   = `codevent-pages-${CACHE_VERSION}`;
 const ALL_CACHES    = [SHELL_CACHE, PAGES_CACHE];
