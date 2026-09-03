@@ -57,6 +57,22 @@ export async function resetPassword(email) {
   }
 }
 
+export function onAuthChange(callback) {
+  return onAuthStateChanged(auth, callback);
+}
+
+export function applyAuthGate(user) {
+  document.querySelectorAll('[data-auth="protected"]').forEach(el => {
+    el.classList.toggle('auth-locked', !user);
+  });
+  document.querySelectorAll('[data-auth="logged-in"]').forEach(el => {
+    el.style.display = user ? '' : 'none';
+  });
+  document.querySelectorAll('[data-auth="logged-out"]').forEach(el => {
+    el.style.display = user ? 'none' : '';
+  });
+}
+
 export function friendlyError(code) {
   const map = {
     "auth/email-already-in-use":   "An account with this email already exists.",
