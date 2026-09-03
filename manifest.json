@@ -1,7 +1,7 @@
 {
   "name": "CodeVent Digital",
   "short_name": "CodeVent",
-  "description": "Building Developers One Step at a Time — free structured coding courses, real projects, and community.",
+  "description": "CodeVent Digital — a technology and digital skills ecosystem for learning, building, and creating with modern technology.",
   "start_url": "/?utm_source=pwa",
   "scope": "./",
   "display": "standalone",
