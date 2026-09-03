@@ -1,8 +1,10 @@
 # CodeVent Digital
 
-**Building Developers One Step at a Time.**
+**Building the Digital Future.**
 
-CodeVent Digital is a web development training and digital product platform that takes beginners from zero to shipping real projects through a structured, free-to-start learning path. It combines a curriculum, a community, a shop, and an AI-powered assistant into one connected experience.
+CodeVent Digital is a technology and digital skills ecosystem focused on helping people learn, build, and create with modern technology. From web development and software engineering to AI automation and machine learning, it combines structured learning, real-world projects, digital tools, and technology solutions into one connected experience.
+
+**Learn technology. Build solutions. Create value.**
 
 🔗 **Live site:** [codeventdigital.site](https://codeventdigital.site)
 📧 **Email:** hello@codeventdigital.site (secondary: codeventdigitalinfo@gmail.com)
@@ -14,10 +16,10 @@ CodeVent Digital is a web development training and digital product platform that
 
 ## What This Is
 
-CodeVent Digital follows a four-stage roadmap:
+CodeVent Digital's course pipeline follows a four-stage roadmap:
 
-1. **Learn** — free, structured, bitesize courses (HTML, CSS, JavaScript and beyond)
-2. **Build** — guided projects that scale from simple pages to full web apps
+1. **Learn** — free, structured, bitesize courses (web development, AI automation, machine learning, and beyond)
+2. **Build** — guided projects that scale from simple pages to full applications
 3. **Validate** — community and mentor feedback on real submitted projects
 4. **Monetize** — access to the Shop, mentorship, and real-world opportunities
 
