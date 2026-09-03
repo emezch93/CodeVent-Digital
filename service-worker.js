@@ -1,15 +1,4 @@
-/**
- * CodeVent Digital — Service Worker
- * Strategy:
- *   - App Shell (CSS/JS/fonts/icons) → Cache-First
- *   - HTML pages                      → Network-First (stale fallback)
- *   - API / external requests         → Network-Only (with graceful fail)
- *   - Offline fallback                → offline.html
- *
- * Auto-update: skipWaiting + clientsClaim ensures new SW activates immediately.
- */
-
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const SHELL_CACHE   = `codevent-shell-${CACHE_VERSION}`;
 const PAGES_CACHE   = `codevent-pages-${CACHE_VERSION}`;
 const ALL_CACHES    = [SHELL_CACHE, PAGES_CACHE];
