@@ -47,23 +47,15 @@ export function currentUser() {
 }
 
 export async function resetPassword(email) {
-  await sendPasswordResetEmail(auth, email);
-}
-
-export function onAuthChange(callback) {
-  return onAuthStateChanged(auth, callback);
-}
-
-export function applyAuthGate(user) {
-  document.querySelectorAll('[data-auth="protected"]').forEach(el => {
-    el.classList.toggle('auth-locked', !user);
+  const res = await fetch("https://password-reset-mailer.emezch93.workers.dev", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
   });
-  document.querySelectorAll('[data-auth="logged-in"]').forEach(el => {
-    el.style.display = user ? '' : 'none';
-  });
-  document.querySelectorAll('[data-auth="logged-out"]').forEach(el => {
-    el.style.display = user ? 'none' : '';
-  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw { code: "auth/network-request-failed", message: data.error || "Failed to send reset email" };
+  }
 }
 
 export function friendlyError(code) {
