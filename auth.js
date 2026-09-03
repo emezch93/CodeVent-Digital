@@ -5,7 +5,6 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
-  sendPasswordResetEmail,
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
